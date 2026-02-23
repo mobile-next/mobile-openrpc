@@ -1,164 +1,68 @@
-# Mobile CLI Server API
+# Mobile Fleet API
 
-JSON-RPC API for mobile device automation and control
+Remote device orchestration, automation and control
 
-**Version:** 1.0.0
+**Version:** 0.0.1
 
 ## Table of Contents
 
-- [devices.list](#devices-list)
-- [pool.list](#pool-list)
-- [pool.allocate](#pool-allocate)
-- [pool.release](#pool-release)
-- [device.screenshot](#device-screenshot)
-- [device.screencapture](#device-screencapture)
-- [device.io.tap](#device-io-tap)
-- [device.io.longpress](#device-io-longpress)
-- [device.io.text](#device-io-text)
-- [device.io.button](#device-io-button)
-- [device.io.gesture](#device-io-gesture)
-- [device.url](#device-url)
-- [device.io.swipe](#device-io-swipe)
-- [device.info](#device-info)
-- [device.io.orientation.get](#device-io-orientation-get)
-- [device.io.orientation.set](#device-io-orientation-set)
-- [device.boot](#device-boot)
-- [device.shutdown](#device-shutdown)
-- [device.reboot](#device-reboot)
-- [device.dump.ui](#device-dump-ui)
-- [device.apps.launch](#device-apps-launch)
-- [device.apps.terminate](#device-apps-terminate)
-- [device.apps.list](#device-apps-list)
-- [device.apps.foreground](#device-apps-foreground)
-- [device.apps.install](#device-apps-install)
-- [uploads.create](#uploads-create)
-- [devices.subscribe](#devices-subscribe)
-- [devices.unsubscribe](#devices-unsubscribe)
-- [devices.changed](#devices-changed)
+- [device.apps.foreground](#deviceappsforeground)
+- [device.apps.install](#deviceappsinstall)
+- [device.apps.launch](#deviceappslaunch)
+- [device.apps.list](#deviceappslist)
+- [device.apps.terminate](#deviceappsterminate)
+- [device.boot](#deviceboot)
+- [device.dump.ui](#devicedumpui)
+- [device.info](#deviceinfo)
+- [device.io.button](#deviceiobutton)
+- [device.io.gesture](#deviceiogesture)
+- [device.io.longpress](#deviceiolongpress)
+- [device.io.orientation.get](#deviceioorientationget)
+- [device.io.orientation.set](#deviceioorientationset)
+- [device.io.swipe](#deviceioswipe)
+- [device.io.tap](#deviceiotap)
+- [device.io.text](#deviceiotext)
+- [device.reboot](#devicereboot)
+- [device.screencapture](#devicescreencapture)
+- [device.screenshot](#devicescreenshot)
+- [device.shutdown](#deviceshutdown)
+- [device.url](#deviceurl)
+- [devices.changed](#deviceschanged)
+- [devices.list](#deviceslist)
+- [devices.subscribe](#devicessubscribe)
+- [devices.unsubscribe](#devicesunsubscribe)
+- [pool.allocate](#poolallocate)
+- [pool.list](#poollist)
+- [pool.release](#poolrelease)
+- [uploads.create](#uploadscreate)
 - [Error Codes](#error-codes)
 
 ## Methods
 
-### devices.list
+### device.apps.foreground
 
-**List all connected devices**
+**Get foreground application**
 
-Returns a list of all connected mobile devices (iOS and Android)
+Returns the currently foreground (active) application on the specified device
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `includeOffline` | `boolean` |  | Include offline devices in the list |
-| `platform` | enum: `ios, android` |  | Filter devices by platform (ios or android) |
-| `type` | `string` |  | Filter devices by type (device or simulator) |
-
-#### Response
-
-**Type:** Array<`Device`>
-
-List of connected devices
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "devices.list",
-  "params": {
-    "includeOffline": false,
-    "platform": "ios",
-    "type": "string"
-  },
-  "id": 1
-}
-```
-
-
-### pool.list
-
-**List available pool devices**
-
-Returns unique device offerings from unallocated devices in the pool, deduplicated by platform/type/name/version
+| `deviceId` | `string` |  | ID of the target device (optional - will auto-select if not provided) |
 
 #### Response
 
 **Type:** `object`
 
-Available pool devices
+Foreground application information
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "pool.list",
-  "params": {},
-  "id": 1
-}
-```
-
-
-### pool.allocate
-
-**Allocate a device from the pool**
-
-Allocates an available device matching the given criteria for the authenticated user
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `platform` | enum: `ios, android` | ✓ | Device platform (ios or android) |
-| `type` | `string` |  | Device type filter (e.g. phone, tablet) |
-| `version` | `string` |  | OS version filter |
-
-#### Response
-
-**Type:** `object`
-
-Allocated device information
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "pool.allocate",
-  "params": {
-    "platform": "ios",
-    "type": "string",
-    "version": "string"
-  },
-  "id": 1
-}
-```
-
-
-### pool.release
-
-**Release an allocated device**
-
-Releases a device allocated by the authenticated user. Sends a reboot command to the device host and removes it from the registry. The device will reconnect after rebooting.
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deviceId` | `string` | ✓ | ID of the device to release |
-
-#### Response
-
-**Type:** `SuccessResult`
-
-Release operation result
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "pool.release",
+  "method": "device.apps.foreground",
   "params": {
     "deviceId": "string"
   },
@@ -167,182 +71,232 @@ Release operation result
 ```
 
 
-### device.screenshot
+### device.apps.install
 
-**Take a screenshot of a device**
+**Install an application on a device**
 
-Captures a screenshot from the specified device and returns it as base64 data
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deviceId` | `string` | ✓ | ID of the target device |
-| `format` | enum: `png, jpeg` |  | Image format (png or jpeg) |
-| `quality` | `integer` |  | Image quality (1-100, only used for JPEG) |
-
-#### Response
-
-**Type:** `ScreenshotResult`
-
-Screenshot data
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "device.screenshot",
-  "params": {
-    "deviceId": "string",
-    "format": "png",
-    "quality": 1
-  },
-  "id": 1
-}
-```
-
-
-### device.screencapture
-
-**Start screen capture streaming**
-
-Starts screen capture streaming for the specified device. Supports MJPEG (iOS and Android) and AVC/H.264 (Android only) formats.
+Downloads a previously uploaded file from S3 and installs it on the specified device. The caller must be the same user who created the upload.
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
-| `format` | enum: `mjpeg, avc` |  | Video format - 'mjpeg' for MJPEG stream (iOS and Android) or 'avc' for H.264 stream (Android only) |
-| `quality` | `integer` |  | Video quality (only used for MJPEG format) |
-| `scale` | `number` |  | Video scale factor |
-
-#### Response
-
-**Type:** `string`
-
-Video stream - multipart/x-mixed-replace for MJPEG or video/h264 for AVC
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "device.screencapture",
-  "params": {
-    "deviceId": "string",
-    "format": "mjpeg",
-    "quality": 0,
-    "scale": 0
-  },
-  "id": 1
-}
-```
-
-
-### device.io.tap
-
-**Perform tap gesture**
-
-Performs a tap gesture at the specified coordinates on the device screen
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deviceId` | `string` | ✓ | ID of the target device |
-| `x` | `integer` | ✓ | X coordinate for the tap |
-| `y` | `integer` | ✓ | Y coordinate for the tap |
+| `uploadId` | `string` | ✓ | ID of the upload (from uploads.create) |
 
 #### Response
 
 **Type:** `SuccessResult`
 
-Operation result
+Install operation result
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.io.tap",
+  "method": "device.apps.install",
   "params": {
     "deviceId": "string",
-    "x": 0,
-    "y": 0
+    "uploadId": "string"
   },
   "id": 1
 }
 ```
 
 
-### device.io.longpress
+### device.apps.launch
 
-**Perform long press gesture**
+**Launch an application**
 
-Performs a long press gesture at the specified coordinates on the device screen
+Launches an application by bundle ID on the specified device
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
-| `x` | `integer` | ✓ | X coordinate for the long press |
-| `y` | `integer` | ✓ | Y coordinate for the long press |
-| `duration` | `integer` |  | Duration of the long press in milliseconds |
+| `bundleId` | `string` | ✓ | Bundle ID of the application to launch |
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** `object`
 
-Operation result
+Launch operation result
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.io.longpress",
+  "method": "device.apps.launch",
   "params": {
     "deviceId": "string",
-    "x": 0,
-    "y": 0,
-    "duration": 500
+    "bundleId": "string"
   },
   "id": 1
 }
 ```
 
 
-### device.io.text
+### device.apps.list
 
-**Input text**
+**List installed applications**
 
-Inputs the specified text on the device
+Returns a list of installed applications on the specified device
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `deviceId` | `string` | ✓ | ID of the target device |
-| `text` | `string` | ✓ | Text to input |
+| `deviceId` | `string` |  | ID of the target device (optional - will auto-select if not provided) |
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** Array<`object`>
 
-Operation result
+List of installed applications
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.io.text",
+  "method": "device.apps.list",
+  "params": {
+    "deviceId": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.apps.terminate
+
+**Terminate an application**
+
+Terminates a running application by bundle ID on the specified device
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+| `bundleId` | `string` | ✓ | Bundle ID of the application to terminate |
+
+#### Response
+
+**Type:** `object`
+
+Terminate operation result
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.apps.terminate",
   "params": {
     "deviceId": "string",
-    "text": "string"
+    "bundleId": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.boot
+
+**Boot a device**
+
+Boots the specified device (simulators/emulators only)
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+
+#### Response
+
+**Type:** `object`
+
+Boot operation result
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.boot",
+  "params": {
+    "deviceId": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.dump.ui
+
+**Dump UI hierarchy**
+
+Dumps the UI hierarchy of the device screen
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+| `format` | enum: `json, raw` |  | Output format (json or raw) |
+
+#### Response
+
+**Type:** `object`
+
+UI hierarchy data
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.dump.ui",
+  "params": {
+    "deviceId": "string",
+    "format": "json"
+  },
+  "id": 1
+}
+```
+
+
+### device.info
+
+**Get device information**
+
+Returns detailed information about the specified device
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+
+#### Response
+
+**Type:** `DeviceInfo`
+
+Device information
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.info",
+  "params": {
+    "deviceId": "string"
   },
   "id": 1
 }
@@ -419,18 +373,20 @@ Operation result
 ```
 
 
-### device.url
+### device.io.longpress
 
-**Open URL**
+**Perform long press gesture**
 
-Opens the specified URL on the device
+Performs a long press gesture at the specified coordinates on the device screen
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
-| `url` | `string` | ✓ | URL to open |
+| `x` | `integer` | ✓ | X coordinate for the long press |
+| `y` | `integer` | ✓ | Y coordinate for the long press |
+| `duration` | `integer` |  | Duration of the long press in milliseconds |
 
 #### Response
 
@@ -443,82 +399,12 @@ Operation result
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.url",
+  "method": "device.io.longpress",
   "params": {
     "deviceId": "string",
-    "url": "string"
-  },
-  "id": 1
-}
-```
-
-
-### device.io.swipe
-
-**Perform swipe gesture**
-
-Performs a swipe gesture from one coordinate to another on the device screen
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deviceId` | `string` | ✓ | ID of the target device |
-| `x1` | `integer` | ✓ | Starting X coordinate |
-| `y1` | `integer` | ✓ | Starting Y coordinate |
-| `x2` | `integer` | ✓ | Ending X coordinate |
-| `y2` | `integer` | ✓ | Ending Y coordinate |
-
-#### Response
-
-**Type:** `SuccessResult`
-
-Operation result
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "device.io.swipe",
-  "params": {
-    "deviceId": "string",
-    "x1": 0,
-    "y1": 0,
-    "x2": 0,
-    "y2": 0
-  },
-  "id": 1
-}
-```
-
-
-### device.info
-
-**Get device information**
-
-Returns detailed information about the specified device
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deviceId` | `string` | ✓ | ID of the target device |
-
-#### Response
-
-**Type:** `DeviceInfo`
-
-Device information
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "device.info",
-  "params": {
-    "deviceId": "string"
+    "x": 0,
+    "y": 0,
+    "duration": 500
   },
   "id": 1
 }
@@ -591,64 +477,110 @@ Operation result
 ```
 
 
-### device.boot
+### device.io.swipe
 
-**Boot a device**
+**Perform swipe gesture**
 
-Boots the specified device (simulators/emulators only)
+Performs a swipe gesture from one coordinate to another on the device screen
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
+| `x1` | `integer` | ✓ | Starting X coordinate |
+| `y1` | `integer` | ✓ | Starting Y coordinate |
+| `x2` | `integer` | ✓ | Ending X coordinate |
+| `y2` | `integer` | ✓ | Ending Y coordinate |
 
 #### Response
 
-**Type:** `object`
+**Type:** `SuccessResult`
 
-Boot operation result
+Operation result
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.boot",
+  "method": "device.io.swipe",
   "params": {
-    "deviceId": "string"
+    "deviceId": "string",
+    "x1": 0,
+    "y1": 0,
+    "x2": 0,
+    "y2": 0
   },
   "id": 1
 }
 ```
 
 
-### device.shutdown
+### device.io.tap
 
-**Shutdown a device**
+**Perform tap gesture**
 
-Shuts down the specified device (simulators/emulators only)
+Performs a tap gesture at the specified coordinates on the device screen
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
+| `x` | `integer` | ✓ | X coordinate for the tap |
+| `y` | `integer` | ✓ | Y coordinate for the tap |
 
 #### Response
 
-**Type:** `object`
+**Type:** `SuccessResult`
 
-Shutdown operation result
+Operation result
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.shutdown",
+  "method": "device.io.tap",
   "params": {
-    "deviceId": "string"
+    "deviceId": "string",
+    "x": 0,
+    "y": 0
+  },
+  "id": 1
+}
+```
+
+
+### device.io.text
+
+**Input text**
+
+Inputs the specified text on the device
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+| `text` | `string` | ✓ | Text to input |
+
+#### Response
+
+**Type:** `SuccessResult`
+
+Operation result
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.io.text",
+  "params": {
+    "deviceId": "string",
+    "text": "string"
   },
   "id": 1
 }
@@ -687,132 +619,104 @@ Reboot operation result
 ```
 
 
-### device.dump.ui
+### device.screencapture
 
-**Dump UI hierarchy**
+**Start screen capture streaming**
 
-Dumps the UI hierarchy of the device screen
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deviceId` | `string` | ✓ | ID of the target device |
-| `format` | enum: `json, raw` |  | Output format (json or raw) |
-
-#### Response
-
-**Type:** `object`
-
-UI hierarchy data
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "device.dump.ui",
-  "params": {
-    "deviceId": "string",
-    "format": "json"
-  },
-  "id": 1
-}
-```
-
-
-### device.apps.launch
-
-**Launch an application**
-
-Launches an application by bundle ID on the specified device
+Starts screen capture streaming for the specified device. Supports MJPEG (iOS and Android) and AVC/H.264 (Android only) formats.
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
-| `bundleId` | `string` | ✓ | Bundle ID of the application to launch |
+| `format` | enum: `mjpeg, avc` |  | Video format - 'mjpeg' for MJPEG stream (iOS and Android) or 'avc' for H.264 stream (Android only) |
+| `quality` | `integer` |  | Video quality (only used for MJPEG format) |
+| `scale` | `number` |  | Video scale factor |
 
 #### Response
 
-**Type:** `object`
+**Type:** `string`
 
-Launch operation result
+Video stream - multipart/x-mixed-replace for MJPEG or video/h264 for AVC
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.apps.launch",
+  "method": "device.screencapture",
   "params": {
     "deviceId": "string",
-    "bundleId": "string"
+    "format": "mjpeg",
+    "quality": 0,
+    "scale": 0
   },
   "id": 1
 }
 ```
 
 
-### device.apps.terminate
+### device.screenshot
 
-**Terminate an application**
+**Take a screenshot of a device**
 
-Terminates a running application by bundle ID on the specified device
+Captures a screenshot from the specified device and returns it as base64 data
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
-| `bundleId` | `string` | ✓ | Bundle ID of the application to terminate |
+| `format` | enum: `png, jpeg` |  | Image format (png or jpeg) |
+| `quality` | `integer` |  | Image quality (1-100, only used for JPEG) |
 
 #### Response
 
-**Type:** `object`
+**Type:** `ScreenshotResult`
 
-Terminate operation result
+Screenshot data
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.apps.terminate",
+  "method": "device.screenshot",
   "params": {
     "deviceId": "string",
-    "bundleId": "string"
+    "format": "png",
+    "quality": 1
   },
   "id": 1
 }
 ```
 
 
-### device.apps.list
+### device.shutdown
 
-**List installed applications**
+**Shutdown a device**
 
-Returns a list of installed applications on the specified device
+Shuts down the specified device (simulators/emulators only)
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `deviceId` | `string` |  | ID of the target device (optional - will auto-select if not provided) |
+| `deviceId` | `string` | ✓ | ID of the target device |
 
 #### Response
 
-**Type:** Array<`object`>
+**Type:** `object`
 
-List of installed applications
+Shutdown operation result
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.apps.list",
+  "method": "device.shutdown",
   "params": {
     "deviceId": "string"
   },
@@ -821,100 +725,112 @@ List of installed applications
 ```
 
 
-### device.apps.foreground
+### device.url
 
-**Get foreground application**
+**Open URL**
 
-Returns the currently foreground (active) application on the specified device
-
-#### Parameters
-
-| Name | Type | Required | Description |
-|------|------|----------|-------------|
-| `deviceId` | `string` |  | ID of the target device (optional - will auto-select if not provided) |
-
-#### Response
-
-**Type:** `object`
-
-Foreground application information
-
-#### Example Request
-
-```json
-{
-  "jsonrpc": "2.0",
-  "method": "device.apps.foreground",
-  "params": {
-    "deviceId": "string"
-  },
-  "id": 1
-}
-```
-
-
-### device.apps.install
-
-**Install an application on a device**
-
-Downloads a previously uploaded file from S3 and installs it on the specified device. The caller must be the same user who created the upload.
+Opens the specified URL on the device
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
-| `uploadId` | `string` | ✓ | ID of the upload (from uploads.create) |
+| `url` | `string` | ✓ | URL to open |
 
 #### Response
 
 **Type:** `SuccessResult`
 
-Install operation result
+Operation result
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.apps.install",
+  "method": "device.url",
   "params": {
     "deviceId": "string",
-    "uploadId": "string"
+    "url": "string"
   },
   "id": 1
 }
 ```
 
 
-### uploads.create
+### devices.changed
 
-**Create a new file upload**
+**Device change notification (server-to-client)**
 
-Generates a presigned S3 URL for uploading a file. The URL enforces the exact file size specified. The filename may only contain letters, digits, hyphens, underscores, and dots.
+A JSON-RPC notification (no id field) sent by the server when the user's device list changes. Only sent while the client has an active subscription via devices.subscribe.
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `filename` | `string` | ✓ | Name of the file to upload (only 0-9, a-z, A-Z, hyphen, underscore, and dot allowed) |
-| `filesize` | `integer` | ✓ | Exact size of the file in bytes |
+| `added` | Array<`Device`> | ✓ | Devices newly allocated to this user |
+| `removed` | Array<`Device`> | ✓ | Devices no longer allocated to this user |
+| `updated` | Array<`Device`> | ✓ | Devices whose state has changed (e.g. online/offline) |
 
 #### Response
 
-**Type:** `UploadResult`
+**Type:** `null`
 
-Upload details
+This is a notification — no response is expected
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "uploads.create",
+  "method": "devices.changed",
   "params": {
-    "filename": "string",
-    "filesize": 1
+    "added": [
+      null
+    ],
+    "removed": [
+      null
+    ],
+    "updated": [
+      null
+    ]
+  },
+  "id": 1
+}
+```
+
+
+### devices.list
+
+**List all connected devices**
+
+Returns a list of all connected mobile devices (iOS and Android)
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `includeOffline` | `boolean` |  | Include offline devices in the list |
+| `platform` | enum: `ios, android` |  | Filter devices by platform (ios or android) |
+| `type` | `string` |  | Filter devices by type (device or simulator) |
+
+#### Response
+
+**Type:** Array<`Device`>
+
+List of connected devices
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "devices.list",
+  "params": {
+    "includeOffline": false,
+    "platform": "ios",
+    "type": "string"
   },
   "id": 1
 }
@@ -969,42 +885,126 @@ Unsubscription acknowledgment
 ```
 
 
-### devices.changed
+### pool.allocate
 
-**Device change notification (server-to-client)**
+**Allocate a device from the pool**
 
-A JSON-RPC notification (no id field) sent by the server when the user's device list changes. Only sent while the client has an active subscription via devices.subscribe.
+Allocates an available device matching the given criteria for the authenticated user
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `added` | Array<`Device`> | ✓ | Devices newly allocated to this user |
-| `removed` | Array<`Device`> | ✓ | Devices no longer allocated to this user |
-| `updated` | Array<`Device`> | ✓ | Devices whose state has changed (e.g. online/offline) |
+| `platform` | enum: `ios, android` | ✓ | Device platform (ios or android) |
+| `type` | `string` |  | Device type filter (e.g. phone, tablet) |
+| `version` | `string` |  | OS version filter |
 
 #### Response
 
-**Type:** `null`
+**Type:** `object`
 
-This is a notification — no response is expected
+Allocated device information
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "devices.changed",
+  "method": "pool.allocate",
   "params": {
-    "added": [
-      null
-    ],
-    "removed": [
-      null
-    ],
-    "updated": [
-      null
-    ]
+    "platform": "ios",
+    "type": "string",
+    "version": "string"
+  },
+  "id": 1
+}
+```
+
+
+### pool.list
+
+**List available pool devices**
+
+Returns unique device offerings from unallocated devices in the pool, deduplicated by platform/type/name/version
+
+#### Response
+
+**Type:** `object`
+
+Available pool devices
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "pool.list",
+  "params": {},
+  "id": 1
+}
+```
+
+
+### pool.release
+
+**Release an allocated device**
+
+Releases a device allocated by the authenticated user. Sends a reboot command to the device host and removes it from the registry. The device will reconnect after rebooting.
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the device to release |
+
+#### Response
+
+**Type:** `SuccessResult`
+
+Release operation result
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "pool.release",
+  "params": {
+    "deviceId": "string"
+  },
+  "id": 1
+}
+```
+
+
+### uploads.create
+
+**Create a new file upload**
+
+Generates a presigned S3 URL for uploading a file. The URL enforces the exact file size specified. The filename may only contain letters, digits, hyphens, underscores, and dots.
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `filename` | `string` | ✓ | Name of the file to upload (only 0-9, a-z, A-Z, hyphen, underscore, and dot allowed) |
+| `filesize` | `integer` | ✓ | Exact size of the file in bytes |
+
+#### Response
+
+**Type:** `UploadResult`
+
+Upload details
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "uploads.create",
+  "params": {
+    "filename": "string",
+    "filesize": 1
   },
   "id": 1
 }
