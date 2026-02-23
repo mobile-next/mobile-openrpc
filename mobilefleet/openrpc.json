@@ -1,0 +1,1118 @@
+{
+  "openrpc": "1.3.2",
+  "info": {
+    "title": "Mobile Fleet API",
+    "description": "Remote device orchestration, automation and control",
+    "version": "0.0.1"
+  },
+  "methods": [
+    {
+      "name": "devices.list",
+      "summary": "List all connected devices",
+      "description": "Returns a list of all connected mobile devices (iOS and Android)",
+      "params": [
+        {
+          "name": "includeOffline",
+          "description": "Include offline devices in the list",
+          "required": false,
+          "schema": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        {
+          "name": "platform",
+          "description": "Filter devices by platform (ios or android)",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["ios", "android"]
+          }
+        },
+        {
+          "name": "type",
+          "description": "Filter devices by type (device or simulator)",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "devices",
+        "description": "List of connected devices",
+        "schema": {
+          "type": "array",
+          "items": {
+            "$ref": "#/components/schemas/Device"
+          }
+        }
+      }
+    },
+    {
+      "name": "pool.list",
+      "summary": "List available pool devices",
+      "description": "Returns unique device offerings from unallocated devices in the pool, deduplicated by platform/type/name/version",
+      "params": [],
+      "result": {
+        "name": "devices",
+        "description": "Available pool devices",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "devices": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PoolDevice"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "pool.allocate",
+      "summary": "Allocate a device from the pool",
+      "description": "Allocates an available device matching the given criteria for the authenticated user",
+      "params": [
+        {
+          "name": "platform",
+          "description": "Device platform (ios or android)",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": ["ios", "android"]
+          }
+        },
+        {
+          "name": "type",
+          "description": "Device type filter (e.g. phone, tablet)",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "version",
+          "description": "OS version filter",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "allocation",
+        "description": "Allocated device information",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "sessionId": {
+              "type": "string",
+              "description": "Session identifier for this allocation"
+            },
+            "device": {
+              "$ref": "#/components/schemas/Device"
+            }
+          },
+          "required": ["sessionId", "device"]
+        }
+      }
+    },
+    {
+      "name": "pool.release",
+      "summary": "Release an allocated device",
+      "description": "Releases a device allocated by the authenticated user. Sends a reboot command to the device host and removes it from the registry. The device will reconnect after rebooting.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the device to release",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "status",
+        "description": "Release operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.screenshot",
+      "summary": "Take a screenshot of a device",
+      "description": "Captures a screenshot from the specified device and returns it as base64 data",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "format",
+          "description": "Image format (png or jpeg)",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["png", "jpeg"],
+            "default": "png"
+          }
+        },
+        {
+          "name": "quality",
+          "description": "Image quality (1-100, only used for JPEG)",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        }
+      ],
+      "result": {
+        "name": "screenshot",
+        "description": "Screenshot data",
+        "schema": {
+          "$ref": "#/components/schemas/ScreenshotResult"
+        }
+      }
+    },
+    {
+      "name": "device.screencapture",
+      "summary": "Start screen capture streaming",
+      "description": "Starts screen capture streaming for the specified device. Supports MJPEG (iOS and Android) and AVC/H.264 (Android only) formats.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "format",
+          "description": "Video format - 'mjpeg' for MJPEG stream (iOS and Android) or 'avc' for H.264 stream (Android only)",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["mjpeg", "avc"],
+            "default": "mjpeg"
+          }
+        },
+        {
+          "name": "quality",
+          "description": "Video quality (only used for MJPEG format)",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "scale",
+          "description": "Video scale factor",
+          "required": false,
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "result": {
+        "name": "stream",
+        "description": "Video stream - multipart/x-mixed-replace for MJPEG or video/h264 for AVC",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "name": "device.io.tap",
+      "summary": "Perform tap gesture",
+      "description": "Performs a tap gesture at the specified coordinates on the device screen",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "x",
+          "description": "X coordinate for the tap",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "y",
+          "description": "Y coordinate for the tap",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.io.longpress",
+      "summary": "Perform long press gesture",
+      "description": "Performs a long press gesture at the specified coordinates on the device screen",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "x",
+          "description": "X coordinate for the long press",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "y",
+          "description": "Y coordinate for the long press",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "duration",
+          "description": "Duration of the long press in milliseconds",
+          "required": false,
+          "schema": {
+            "type": "integer",
+            "default": 500
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.io.text",
+      "summary": "Input text",
+      "description": "Inputs the specified text on the device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "text",
+          "description": "Text to input",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.io.button",
+      "summary": "Press device button",
+      "description": "Presses a physical or virtual button on the device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "button",
+          "description": "Button to press",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.io.gesture",
+      "summary": "Perform custom gesture",
+      "description": "Performs a custom gesture with multiple actions on the device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "actions",
+          "description": "List of gesture actions to perform",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.url",
+      "summary": "Open URL",
+      "description": "Opens the specified URL on the device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "url",
+          "description": "URL to open",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.io.swipe",
+      "summary": "Perform swipe gesture",
+      "description": "Performs a swipe gesture from one coordinate to another on the device screen",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "x1",
+          "description": "Starting X coordinate",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "y1",
+          "description": "Starting Y coordinate",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "x2",
+          "description": "Ending X coordinate",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "y2",
+          "description": "Ending Y coordinate",
+          "required": true,
+          "schema": {
+            "type": "integer"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.info",
+      "summary": "Get device information",
+      "description": "Returns detailed information about the specified device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "deviceInfo",
+        "description": "Device information",
+        "schema": {
+          "$ref": "#/components/schemas/DeviceInfo"
+        }
+      }
+    },
+    {
+      "name": "device.io.orientation.get",
+      "summary": "Get device orientation",
+      "description": "Returns the current orientation of the device screen",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "orientation",
+        "description": "Current device orientation",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.io.orientation.set",
+      "summary": "Set device orientation",
+      "description": "Sets the orientation of the device screen",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "orientation",
+          "description": "Desired orientation",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.boot",
+      "summary": "Boot a device",
+      "description": "Boots the specified device (simulators/emulators only)",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "bootResult",
+        "description": "Boot operation result",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.shutdown",
+      "summary": "Shutdown a device",
+      "description": "Shuts down the specified device (simulators/emulators only)",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "shutdownResult",
+        "description": "Shutdown operation result",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.reboot",
+      "summary": "Reboot a device",
+      "description": "Reboots the specified device (simulators/emulators only)",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "rebootResult",
+        "description": "Reboot operation result",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.dump.ui",
+      "summary": "Dump UI hierarchy",
+      "description": "Dumps the UI hierarchy of the device screen",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "format",
+          "description": "Output format (json or raw)",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["json", "raw"],
+            "default": "json"
+          }
+        }
+      ],
+      "result": {
+        "name": "uiHierarchy",
+        "description": "UI hierarchy data",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.apps.launch",
+      "summary": "Launch an application",
+      "description": "Launches an application by bundle ID on the specified device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle ID of the application to launch",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "launchResult",
+        "description": "Launch operation result",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.apps.terminate",
+      "summary": "Terminate an application",
+      "description": "Terminates a running application by bundle ID on the specified device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle ID of the application to terminate",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "terminateResult",
+        "description": "Terminate operation result",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.apps.list",
+      "summary": "List installed applications",
+      "description": "Returns a list of installed applications on the specified device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "apps",
+        "description": "List of installed applications",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        }
+      }
+    },
+    {
+      "name": "device.apps.foreground",
+      "summary": "Get foreground application",
+      "description": "Returns the currently foreground (active) application on the specified device",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "foregroundApp",
+        "description": "Foreground application information",
+        "schema": {
+          "type": "object"
+        }
+      }
+    },
+    {
+      "name": "device.apps.install",
+      "summary": "Install an application on a device",
+      "description": "Downloads a previously uploaded file from S3 and installs it on the specified device. The caller must be the same user who created the upload.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "uploadId",
+          "description": "ID of the upload (from uploads.create)",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "status",
+        "description": "Install operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "uploads.create",
+      "summary": "Create a new file upload",
+      "description": "Generates a presigned S3 URL for uploading a file. The URL enforces the exact file size specified. The filename may only contain letters, digits, hyphens, underscores, and dots.",
+      "params": [
+        {
+          "name": "filename",
+          "description": "Name of the file to upload (only 0-9, a-z, A-Z, hyphen, underscore, and dot allowed)",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "pattern": "^[0-9a-zA-Z_.-]+$"
+          }
+        },
+        {
+          "name": "filesize",
+          "description": "Exact size of the file in bytes",
+          "required": true,
+          "schema": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      ],
+      "result": {
+        "name": "upload",
+        "description": "Upload details",
+        "schema": {
+          "$ref": "#/components/schemas/UploadResult"
+        }
+      }
+    },
+    {
+      "name": "devices.subscribe",
+      "summary": "Subscribe to device change notifications",
+      "description": "Starts receiving devices.changed notifications for the authenticated user's allocated devices. The subscription is tied to the WebSocket connection and ends when the connection closes or devices.unsubscribe is called.",
+      "params": [],
+      "result": {
+        "name": "status",
+        "description": "Subscription acknowledgment",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "devices.unsubscribe",
+      "summary": "Unsubscribe from device change notifications",
+      "description": "Stops receiving devices.changed notifications. The subscription also ends automatically when the WebSocket connection closes.",
+      "params": [],
+      "result": {
+        "name": "status",
+        "description": "Unsubscription acknowledgment",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "devices.changed",
+      "summary": "Device change notification (server-to-client)",
+      "description": "A JSON-RPC notification (no id field) sent by the server when the user's device list changes. Only sent while the client has an active subscription via devices.subscribe.",
+      "params": [
+        {
+          "name": "added",
+          "description": "Devices newly allocated to this user",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          }
+        },
+        {
+          "name": "removed",
+          "description": "Devices no longer allocated to this user",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          }
+        },
+        {
+          "name": "updated",
+          "description": "Devices whose state has changed (e.g. online/offline)",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Device"
+            }
+          }
+        }
+      ],
+      "result": {
+        "name": "void",
+        "description": "This is a notification — no response is expected",
+        "schema": {
+          "type": "null"
+        }
+      }
+    }
+  ],
+  "components": {
+    "errors": {
+      "ParseError": {
+        "code": -32700,
+        "message": "Parse error",
+        "data": "Invalid JSON was received by the server"
+      },
+      "InvalidRequest": {
+        "code": -32600,
+        "message": "Invalid Request",
+        "data": "The JSON sent is not a valid Request object"
+      },
+      "MethodNotFound": {
+        "code": -32601,
+        "message": "Method not found",
+        "data": "The method does not exist or is not available"
+      },
+      "InvalidParams": {
+        "code": -32602,
+        "message": "Invalid params",
+        "data": "Invalid method parameters"
+      },
+      "InternalError": {
+        "code": -32603,
+        "message": "Internal error",
+        "data": "Internal JSON-RPC error"
+      },
+      "ServerError": {
+        "code": -32000,
+        "message": "Server error",
+        "data": "Unexpected internal server error"
+      },
+      "Unauthorized": {
+        "code": -32001,
+        "message": "Unauthorized",
+        "data": "Missing or invalid authentication credentials"
+      },
+      "TokenExpired": {
+        "code": -32002,
+        "message": "Token expired",
+        "data": "Authentication token has expired"
+      },
+      "Forbidden": {
+        "code": -32003,
+        "message": "Forbidden",
+        "data": "Authenticated but not authorized to access this resource"
+      },
+      "DeviceNotFound": {
+        "code": -32010,
+        "message": "Device not found",
+        "data": "The specified device does not exist"
+      },
+      "UploadNotFound": {
+        "code": -32011,
+        "message": "Upload not found",
+        "data": "The specified upload does not exist"
+      },
+      "DeviceNotAllocated": {
+        "code": -32020,
+        "message": "Device not allocated",
+        "data": "The device is not currently allocated or has been released"
+      },
+      "DeviceUnavailable": {
+        "code": -32021,
+        "message": "Device unavailable",
+        "data": "The device host session is disconnected"
+      },
+      "NoMatchingDevice": {
+        "code": -32022,
+        "message": "No matching device",
+        "data": "No available device matches the requested criteria"
+      },
+      "TooManyConnections": {
+        "code": -32030,
+        "message": "Too many connections",
+        "data": "Connection limit exceeded for this user"
+      },
+      "FileSizeExceeded": {
+        "code": -32031,
+        "message": "File size exceeded",
+        "data": "File size exceeds the maximum allowed limit"
+      },
+      "InvalidFilename": {
+        "code": -32040,
+        "message": "Invalid filename",
+        "data": "Filename contains invalid characters"
+      },
+      "InvalidFileSize": {
+        "code": -32041,
+        "message": "Invalid file size",
+        "data": "File size must be a positive number"
+      },
+      "UploadFailed": {
+        "code": -32042,
+        "message": "Upload failed",
+        "data": "Failed to generate upload URL"
+      },
+      "DeviceTimeout": {
+        "code": -32050,
+        "message": "Device timeout",
+        "data": "The device did not respond in time"
+      }
+    },
+    "schemas": {
+      "Device": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique device identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Device name"
+          },
+          "platform": {
+            "type": "string",
+            "enum": ["ios", "android"],
+            "description": "Device platform"
+          },
+          "status": {
+            "type": "string",
+            "description": "Device connection status"
+          },
+          "model": {
+            "type": "string",
+            "description": "Device model"
+          }
+        },
+        "required": ["id", "name", "platform", "status", "model"]
+      },
+      "ScreenshotResult": {
+        "type": "object",
+        "properties": {
+          "format": {
+            "type": "string",
+            "enum": ["png", "jpeg"],
+            "description": "Image format"
+          },
+          "data": {
+            "type": "string",
+            "description": "Base64 encoded image data with data URI prefix"
+          }
+        },
+        "required": ["format", "data"]
+      },
+      "SuccessResult": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ok"],
+            "description": "Operation status"
+          }
+        },
+        "required": ["status"]
+      },
+      "PoolDevice": {
+        "type": "object",
+        "properties": {
+          "platform": {
+            "type": "string",
+            "enum": ["ios", "android"],
+            "description": "Device platform"
+          },
+          "type": {
+            "type": "string",
+            "description": "Device type (e.g. phone, tablet)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Device marketing name"
+          },
+          "version": {
+            "type": "string",
+            "description": "OS version"
+          }
+        },
+        "required": ["platform", "type", "name", "version"]
+      },
+      "DeviceInfo": {
+        "type": "object",
+        "description": "Detailed device information",
+        "additionalProperties": true
+      },
+      "UploadResult": {
+        "type": "object",
+        "properties": {
+          "uploadId": {
+            "type": "string",
+            "description": "Unique identifier for this upload"
+          },
+          "uploadUrl": {
+            "type": "string",
+            "format": "uri",
+            "description": "Presigned S3 URL for uploading the file via PUT"
+          },
+          "expiresAt": {
+            "type": "integer",
+            "description": "Unix timestamp when the upload URL expires"
+          }
+        },
+        "required": ["uploadId", "uploadUrl", "expiresAt"]
+      }
+    }
+  }
+}
