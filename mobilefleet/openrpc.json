@@ -50,20 +50,20 @@
       }
     },
     {
-      "name": "pool.list",
-      "summary": "List available pool devices",
-      "description": "Returns unique device offerings from unallocated devices in the pool, deduplicated by platform/type/name/version",
+      "name": "fleet.listDevices",
+      "summary": "List available device fleet devices",
+      "description": "Returns unique device offerings from unallocated devices in the device fleet, deduplicated by platform/type/name/version",
       "params": [],
       "result": {
         "name": "devices",
-        "description": "Available pool devices",
+        "description": "Available device fleet devices",
         "schema": {
           "type": "object",
           "properties": {
             "devices": {
               "type": "array",
               "items": {
-                "$ref": "#/components/schemas/PoolDevice"
+                "$ref": "#/components/schemas/FleetDevice"
               }
             }
           }
@@ -71,8 +71,8 @@
       }
     },
     {
-      "name": "pool.allocate",
-      "summary": "Allocate a device from the pool",
+      "name": "fleet.allocate",
+      "summary": "Allocate a device from the device fleet",
       "description": "Allocates an available device matching the given criteria for the authenticated user",
       "params": [
         {
@@ -120,9 +120,9 @@
       }
     },
     {
-      "name": "pool.release",
+      "name": "fleet.release",
       "summary": "Release an allocated device",
-      "description": "Releases a device allocated by the authenticated user. Sends a reboot command to the device host and removes it from the registry. The device will reconnect after rebooting.",
+      "description": "Releases a device allocated by the authenticated user. Device will go through a wiping process",
       "params": [
         {
           "name": "deviceId",
@@ -1066,7 +1066,7 @@
         },
         "required": ["status"]
       },
-      "PoolDevice": {
+      "FleetDevice": {
         "type": "object",
         "properties": {
           "platform": {

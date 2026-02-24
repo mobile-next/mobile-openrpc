@@ -31,9 +31,9 @@ Remote device orchestration, automation and control
 - [devices.list](#deviceslist)
 - [devices.subscribe](#devicessubscribe)
 - [devices.unsubscribe](#devicesunsubscribe)
-- [pool.allocate](#poolallocate)
-- [pool.list](#poollist)
-- [pool.release](#poolrelease)
+- [fleet.allocate](#fleetallocate)
+- [fleet.listDevices](#fleetlistdevices)
+- [fleet.release](#fleetrelease)
 - [uploads.create](#uploadscreate)
 - [Error Codes](#error-codes)
 
@@ -885,9 +885,9 @@ Unsubscription acknowledgment
 ```
 
 
-### pool.allocate
+### fleet.allocate
 
-**Allocate a device from the pool**
+**Allocate a device from the device fleet**
 
 Allocates an available device matching the given criteria for the authenticated user
 
@@ -910,7 +910,7 @@ Allocated device information
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "pool.allocate",
+  "method": "fleet.allocate",
   "params": {
     "platform": "ios",
     "type": "string",
@@ -921,35 +921,35 @@ Allocated device information
 ```
 
 
-### pool.list
+### fleet.listDevices
 
-**List available pool devices**
+**List available device fleet devices**
 
-Returns unique device offerings from unallocated devices in the pool, deduplicated by platform/type/name/version
+Returns unique device offerings from unallocated devices in the device fleet, deduplicated by platform/type/name/version
 
 #### Response
 
 **Type:** `object`
 
-Available pool devices
+Available device fleet devices
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "pool.list",
+  "method": "fleet.listDevices",
   "params": {},
   "id": 1
 }
 ```
 
 
-### pool.release
+### fleet.release
 
 **Release an allocated device**
 
-Releases a device allocated by the authenticated user. Sends a reboot command to the device host and removes it from the registry. The device will reconnect after rebooting.
+Releases a device allocated by the authenticated user. Device will go through a wiping process
 
 #### Parameters
 
@@ -968,7 +968,7 @@ Release operation result
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "pool.release",
+  "method": "fleet.release",
   "params": {
     "deviceId": "string"
   },
