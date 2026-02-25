@@ -73,31 +73,18 @@
     {
       "name": "fleet.allocate",
       "summary": "Allocate a device from the device fleet",
-      "description": "Allocates an available device matching the given criteria for the authenticated user",
+      "description": "Allocates an available device matching the given filter criteria for the authenticated user. Filters are ANDed together. A filter with attribute 'platform' and operator 'EQUALS' is required.",
       "params": [
         {
-          "name": "platform",
-          "description": "Device platform (ios or android)",
+          "name": "filters",
+          "description": "Array of filters to match devices against. Must include a platform filter.",
           "required": true,
           "schema": {
-            "type": "string",
-            "enum": ["ios", "android"]
-          }
-        },
-        {
-          "name": "type",
-          "description": "Device type filter (e.g. phone, tablet)",
-          "required": false,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "version",
-          "description": "OS version filter",
-          "required": false,
-          "schema": {
-            "type": "string"
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeviceFilter"
+            },
+            "minItems": 1
           }
         }
       ],
@@ -1112,6 +1099,85 @@
           }
         },
         "required": ["uploadId", "uploadUrl", "expiresAt"]
+      },
+      "DeviceFilter": {
+        "description": "A filter criterion for device selection. Multiple filters are ANDed together. When multiple filters target the same attribute, they are also ANDed (e.g., version >= 18 AND version < 20).",
+        "oneOf": [
+          {
+            "type": "object",
+            "description": "Filter by device platform",
+            "properties": {
+              "attribute": {
+                "type": "string",
+                "const": "platform"
+              },
+              "operator": {
+                "type": "string",
+                "enum": ["EQUALS"]
+              },
+              "value": {
+                "type": "string",
+                "enum": ["ios", "android"]
+              }
+            },
+            "required": ["attribute", "operator", "value"]
+          },
+          {
+            "type": "object",
+            "description": "Filter by device type",
+            "properties": {
+              "attribute": {
+                "type": "string",
+                "const": "type"
+              },
+              "operator": {
+                "type": "string",
+                "enum": ["EQUALS"]
+              },
+              "value": {
+                "type": "string",
+                "enum": ["real"]
+              }
+            },
+            "required": ["attribute", "operator", "value"]
+          },
+          {
+            "type": "object",
+            "description": "Filter by device name",
+            "properties": {
+              "attribute": {
+                "type": "string",
+                "const": "name"
+              },
+              "operator": {
+                "type": "string",
+                "enum": ["EQUALS", "STARTS_WITH", "CONTAINS"]
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": ["attribute", "operator", "value"]
+          },
+          {
+            "type": "object",
+            "description": "Filter by OS version. Comparison is semver-aware (e.g., '18' matches '18.0.0').",
+            "properties": {
+              "attribute": {
+                "type": "string",
+                "const": "version"
+              },
+              "operator": {
+                "type": "string",
+                "enum": ["EQUALS", "GREATER_THAN", "GREATER_THAN_OR_EQUALS", "LESS_THAN", "LESS_THAN_OR_EQUALS"]
+              },
+              "value": {
+                "type": "string"
+              }
+            },
+            "required": ["attribute", "operator", "value"]
+          }
+        ]
       }
     }
   }

@@ -36,6 +36,7 @@ Remote device orchestration, automation and control
 - [fleet.release](#fleetrelease)
 - [uploads.create](#uploadscreate)
 - [Error Codes](#error-codes)
+- [Schemas](#schemas)
 
 ## Methods
 
@@ -86,7 +87,7 @@ Downloads a previously uploaded file from S3 and installs it on the specified de
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Install operation result
 
@@ -285,7 +286,7 @@ Returns detailed information about the specified device
 
 #### Response
 
-**Type:** `DeviceInfo`
+**Type:** [`DeviceInfo`](#deviceinfo)
 
 Device information
 
@@ -318,7 +319,7 @@ Presses a physical or virtual button on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -352,7 +353,7 @@ Performs a custom gesture with multiple actions on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -390,7 +391,7 @@ Performs a long press gesture at the specified coordinates on the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -458,7 +459,7 @@ Sets the orientation of the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -495,7 +496,7 @@ Performs a swipe gesture from one coordinate to another on the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -533,7 +534,7 @@ Performs a tap gesture at the specified coordinates on the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -568,7 +569,7 @@ Inputs the specified text on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -673,7 +674,7 @@ Captures a screenshot from the specified device and returns it as base64 data
 
 #### Response
 
-**Type:** `ScreenshotResult`
+**Type:** [`ScreenshotResult`](#screenshotresult)
 
 Screenshot data
 
@@ -740,7 +741,7 @@ Opens the specified URL on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -769,9 +770,9 @@ A JSON-RPC notification (no id field) sent by the server when the user's device 
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `added` | Array<`Device`> | ✓ | Devices newly allocated to this user |
-| `removed` | Array<`Device`> | ✓ | Devices no longer allocated to this user |
-| `updated` | Array<`Device`> | ✓ | Devices whose state has changed (e.g. online/offline) |
+| `added` | Array<[`Device`](#device)> | ✓ | Devices newly allocated to this user |
+| `removed` | Array<[`Device`](#device)> | ✓ | Devices no longer allocated to this user |
+| `updated` | Array<[`Device`](#device)> | ✓ | Devices whose state has changed (e.g. online/offline) |
 
 #### Response
 
@@ -787,13 +788,31 @@ This is a notification — no response is expected
   "method": "devices.changed",
   "params": {
     "added": [
-      null
+      {
+        "id": "string",
+        "name": "string",
+        "platform": "ios",
+        "status": "string",
+        "model": "string"
+      }
     ],
     "removed": [
-      null
+      {
+        "id": "string",
+        "name": "string",
+        "platform": "ios",
+        "status": "string",
+        "model": "string"
+      }
     ],
     "updated": [
-      null
+      {
+        "id": "string",
+        "name": "string",
+        "platform": "ios",
+        "status": "string",
+        "model": "string"
+      }
     ]
   },
   "id": 1
@@ -817,7 +836,7 @@ Returns a list of all connected mobile devices (iOS and Android)
 
 #### Response
 
-**Type:** Array<`Device`>
+**Type:** Array<[`Device`](#device)>
 
 List of connected devices
 
@@ -845,7 +864,7 @@ Starts receiving devices.changed notifications for the authenticated user's allo
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Subscription acknowledgment
 
@@ -869,7 +888,7 @@ Stops receiving devices.changed notifications. The subscription also ends automa
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Unsubscription acknowledgment
 
@@ -889,15 +908,13 @@ Unsubscription acknowledgment
 
 **Allocate a device from the device fleet**
 
-Allocates an available device matching the given criteria for the authenticated user
+Allocates an available device matching the given filter criteria for the authenticated user. Filters are ANDed together. A filter with attribute 'platform' and operator 'EQUALS' is required.
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
-| `platform` | enum: `ios, android` | ✓ | Device platform (ios or android) |
-| `type` | `string` |  | Device type filter (e.g. phone, tablet) |
-| `version` | `string` |  | OS version filter |
+| `filters` | Array<[`DeviceFilter`](#devicefilter)> | ✓ | Array of filters to match devices against. Must include a platform filter. |
 
 #### Response
 
@@ -912,9 +929,13 @@ Allocated device information
   "jsonrpc": "2.0",
   "method": "fleet.allocate",
   "params": {
-    "platform": "ios",
-    "type": "string",
-    "version": "string"
+    "filters": [
+      {
+        "attribute": "platform",
+        "operator": "EQUALS",
+        "value": "ios"
+      }
+    ]
   },
   "id": 1
 }
@@ -959,7 +980,7 @@ Releases a device allocated by the authenticated user. Device will go through a 
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Release operation result
 
@@ -992,7 +1013,7 @@ Generates a presigned S3 URL for uploading a file. The URL enforces the exact fi
 
 #### Response
 
-**Type:** `UploadResult`
+**Type:** [`UploadResult`](#uploadresult)
 
 Upload details
 
@@ -1035,3 +1056,89 @@ Upload details
 | `-32041` | **InvalidFileSize** | Invalid file size | File size must be a positive number |
 | `-32042` | **UploadFailed** | Upload failed | Failed to generate upload URL |
 | `-32050` | **DeviceTimeout** | Device timeout | The device did not respond in time |
+
+## Schemas
+
+### Device
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `id` | `string` | ✓ | Unique device identifier |
+| `name` | `string` | ✓ | Device name |
+| `platform` | enum: `ios, android` | ✓ | Device platform |
+| `status` | `string` | ✓ | Device connection status |
+| `model` | `string` | ✓ | Device model |
+
+### DeviceFilter
+
+A filter criterion for device selection. Multiple filters are ANDed together. When multiple filters target the same attribute, they are also ANDed (e.g., version >= 18 AND version < 20).
+
+**Variants:**
+
+- Filter by device platform
+
+  | Property | Type | Required | Description |
+  |----------|------|----------|-------------|
+  | `attribute` | `"platform"` | ✓ |  |
+  | `operator` | enum: `EQUALS` | ✓ |  |
+  | `value` | enum: `ios, android` | ✓ |  |
+
+- Filter by device type
+
+  | Property | Type | Required | Description |
+  |----------|------|----------|-------------|
+  | `attribute` | `"type"` | ✓ |  |
+  | `operator` | enum: `EQUALS` | ✓ |  |
+  | `value` | enum: `real` | ✓ |  |
+
+- Filter by device name
+
+  | Property | Type | Required | Description |
+  |----------|------|----------|-------------|
+  | `attribute` | `"name"` | ✓ |  |
+  | `operator` | enum: `EQUALS, STARTS_WITH, CONTAINS` | ✓ |  |
+  | `value` | `string` | ✓ |  |
+
+- Filter by OS version. Comparison is semver-aware (e.g., '18' matches '18.0.0').
+
+  | Property | Type | Required | Description |
+  |----------|------|----------|-------------|
+  | `attribute` | `"version"` | ✓ |  |
+  | `operator` | enum: `EQUALS, GREATER_THAN, GREATER_THAN_OR_EQUALS, LESS_THAN, LESS_THAN_OR_EQUALS` | ✓ |  |
+  | `value` | `string` | ✓ |  |
+
+### DeviceInfo
+
+Detailed device information
+
+`object`
+
+### FleetDevice
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `platform` | enum: `ios, android` | ✓ | Device platform |
+| `type` | `string` | ✓ | Device type (e.g. phone, tablet) |
+| `name` | `string` | ✓ | Device marketing name |
+| `version` | `string` | ✓ | OS version |
+
+### ScreenshotResult
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `format` | enum: `png, jpeg` | ✓ | Image format |
+| `data` | `string` | ✓ | Base64 encoded image data with data URI prefix |
+
+### SuccessResult
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `status` | enum: `ok` | ✓ | Operation status |
+
+### UploadResult
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `uploadId` | `string` | ✓ | Unique identifier for this upload |
+| `uploadUrl` | `string` | ✓ | Presigned S3 URL for uploading the file via PUT |
+| `expiresAt` | `integer` | ✓ | Unix timestamp when the upload URL expires |
