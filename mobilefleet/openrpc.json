@@ -171,9 +171,9 @@
       }
     },
     {
-      "name": "device.screencapture",
-      "summary": "Start screen capture streaming",
-      "description": "Starts screen capture streaming for the specified device. Supports MJPEG (iOS and Android) and AVC/H.264 (Android only) formats.",
+      "name": "device.screenrecord",
+      "summary": "Start screen recording",
+      "description": "Starts recording the device screen to an MP4 file. The recording runs asynchronously and must be stopped with device.screenrecord.stop.",
       "params": [
         {
           "name": "deviceId",
@@ -185,36 +185,59 @@
         },
         {
           "name": "format",
-          "description": "Video format - 'mjpeg' for MJPEG stream (iOS and Android) or 'avc' for H.264 stream (Android only)",
+          "description": "Video format",
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["mjpeg", "avc"],
-            "default": "mjpeg"
+            "enum": ["mp4"],
+            "default": "mp4"
           }
         },
         {
-          "name": "quality",
-          "description": "Video quality (only used for MJPEG format)",
+          "name": "timeLimit",
+          "description": "Maximum recording duration in seconds",
           "required": false,
           "schema": {
             "type": "integer"
           }
         },
         {
-          "name": "scale",
-          "description": "Video scale factor",
+          "name": "bitrate",
+          "description": "Video bitrate (e.g. '4000K', '8M')",
           "required": false,
           "schema": {
-            "type": "number"
+            "type": "string",
+            "pattern": "^[0-9]+(K|M)$"
           }
         }
       ],
       "result": {
-        "name": "stream",
-        "description": "Video stream - multipart/x-mixed-replace for MJPEG or video/h264 for AVC",
+        "name": "recordingStatus",
+        "description": "Recording start acknowledgment",
         "schema": {
-          "type": "string"
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.screenrecord.stop",
+      "summary": "Stop screen recording",
+      "description": "Stops an active screen recording and returns the recorded video URL",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "recording",
+        "description": "Screen recording result",
+        "schema": {
+          "$ref": "#/components/schemas/ScreenRecordResult"
         }
       }
     },
@@ -1080,6 +1103,25 @@
         "type": "object",
         "description": "Detailed device information",
         "additionalProperties": true
+      },
+      "ScreenRecordResult": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["ok"],
+            "description": "Operation status"
+          },
+          "duration": {
+            "type": "integer",
+            "description": "Recording duration in seconds"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL of the recorded video"
+          }
+        },
+        "required": ["status", "duration", "url"]
       },
       "UploadResult": {
         "type": "object",

@@ -23,7 +23,8 @@ Remote device orchestration, automation and control
 - [device.io.tap](#deviceiotap)
 - [device.io.text](#deviceiotext)
 - [device.reboot](#devicereboot)
-- [device.screencapture](#devicescreencapture)
+- [device.screenrecord](#devicescreenrecord)
+- [device.screenrecord.stop](#devicescreenrecordstop)
 - [device.screenshot](#devicescreenshot)
 - [device.shutdown](#deviceshutdown)
 - [device.url](#deviceurl)
@@ -620,38 +621,70 @@ Reboot operation result
 ```
 
 
-### device.screencapture
+### device.screenrecord
 
-**Start screen capture streaming**
+**Start screen recording**
 
-Starts screen capture streaming for the specified device. Supports MJPEG (iOS and Android) and AVC/H.264 (Android only) formats.
+Starts recording the device screen to an MP4 file. The recording runs asynchronously and must be stopped with device.screenrecord.stop.
 
 #### Parameters
 
 | Name | Type | Required | Description |
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
-| `format` | enum: `mjpeg, avc` |  | Video format - 'mjpeg' for MJPEG stream (iOS and Android) or 'avc' for H.264 stream (Android only) |
-| `quality` | `integer` |  | Video quality (only used for MJPEG format) |
-| `scale` | `number` |  | Video scale factor |
+| `format` | enum: `mp4` |  | Video format |
+| `timeLimit` | `integer` |  | Maximum recording duration in seconds |
+| `bitrate` | `string` |  | Video bitrate (e.g. '4000K', '8M') |
 
 #### Response
 
-**Type:** `string`
+**Type:** [`SuccessResult`](#successresult)
 
-Video stream - multipart/x-mixed-replace for MJPEG or video/h264 for AVC
+Recording start acknowledgment
 
 #### Example Request
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "device.screencapture",
+  "method": "device.screenrecord",
   "params": {
     "deviceId": "string",
-    "format": "mjpeg",
-    "quality": 0,
-    "scale": 0
+    "format": "mp4",
+    "timeLimit": 0,
+    "bitrate": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.screenrecord.stop
+
+**Stop screen recording**
+
+Stops an active screen recording and returns the recorded video URL
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+
+#### Response
+
+**Type:** [`ScreenRecordResult`](#screenrecordresult)
+
+Screen recording result
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.screenrecord.stop",
+  "params": {
+    "deviceId": "string"
   },
   "id": 1
 }
@@ -1121,6 +1154,14 @@ Detailed device information
 | `type` | `string` | ✓ | Device type (e.g. phone, tablet) |
 | `name` | `string` | ✓ | Device marketing name |
 | `version` | `string` | ✓ | OS version |
+
+### ScreenRecordResult
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `status` | enum: `ok` | ✓ | Operation status |
+| `duration` | `integer` | ✓ | Recording duration in seconds |
+| `url` | `string` | ✓ | URL of the recorded video |
 
 ### ScreenshotResult
 
