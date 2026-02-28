@@ -32,6 +32,7 @@ JSON-RPC API for mobile device automation and control
 - [server.info](#serverinfo)
 - [server.shutdown](#servershutdown)
 - [Error Codes](#error-codes)
+- [Schemas](#schemas)
 
 ## Methods
 
@@ -85,7 +86,7 @@ Installs an application on the specified device from a local file path. Supports
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -222,7 +223,7 @@ Uninstalls an application from the specified device by its bundle/package ID
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -321,7 +322,7 @@ Returns detailed information about the specified device
 
 #### Response
 
-**Type:** `DeviceInfo`
+**Type:** [`DeviceInfo`](#deviceinfo)
 
 Device information
 
@@ -354,7 +355,7 @@ Presses a physical or virtual button on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -388,7 +389,7 @@ Performs a custom gesture with multiple actions on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -426,7 +427,7 @@ Performs a long press gesture at the specified coordinates on the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -494,7 +495,7 @@ Sets the orientation of the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -531,7 +532,7 @@ Performs a swipe gesture from one coordinate to another on the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -569,7 +570,7 @@ Performs a tap gesture at the specified coordinates on the device screen
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -604,7 +605,7 @@ Inputs the specified text on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -709,7 +710,7 @@ Captures a screenshot from the specified device and returns it as base64 data
 
 #### Response
 
-**Type:** `ScreenshotResult`
+**Type:** [`ScreenshotResult`](#screenshotresult)
 
 Screenshot data
 
@@ -776,7 +777,7 @@ Opens the specified URL on the device
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -811,7 +812,7 @@ Returns a list of all connected mobile devices (iOS and Android)
 
 #### Response
 
-**Type:** Array<`Device`>
+**Type:** Array<[`Device`](#device)>
 
 List of connected devices
 
@@ -839,7 +840,7 @@ Returns the server name and version
 
 #### Response
 
-**Type:** `ServerInfo`
+**Type:** [`ServerInfo`](#serverinfo)
 
 Server information
 
@@ -863,7 +864,7 @@ Initiates a graceful server shutdown
 
 #### Response
 
-**Type:** `SuccessResult`
+**Type:** [`SuccessResult`](#successresult)
 
 Operation result
 
@@ -891,3 +892,41 @@ Operation result
 | `-32000` | **ServerError** | Server error | Unexpected internal server error |
 | `-32010` | **DeviceNotFound** | Device not found | The specified device does not exist |
 | `-32050` | **DeviceTimeout** | Device timeout | The device did not respond in time |
+
+## Schemas
+
+### Device
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `id` | `string` | ✓ | Unique device identifier |
+| `name` | `string` | ✓ | Device name |
+| `platform` | enum: `ios, android` | ✓ | Device platform |
+| `status` | `string` | ✓ | Device connection status |
+| `model` | `string` | ✓ | Device model |
+
+### DeviceInfo
+
+Detailed device information
+
+`object`
+
+### ScreenshotResult
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `format` | enum: `png, jpeg` | ✓ | Image format |
+| `data` | `string` | ✓ | Base64 encoded image data with data URI prefix |
+
+### ServerInfo
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `name` | `string` | ✓ | Server name |
+| `version` | `string` | ✓ | Server version |
+
+### SuccessResult
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `status` | enum: `ok` | ✓ | Operation status |
