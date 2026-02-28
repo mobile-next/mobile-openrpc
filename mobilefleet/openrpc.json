@@ -171,6 +171,54 @@
       }
     },
     {
+      "name": "device.screencapture",
+      "summary": "Start screen capture streaming",
+      "description": "Starts screen capture streaming for the specified device. Supports MJPEG (iOS and Android) and AVC/H.264 (Android only) formats.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "format",
+          "description": "Video format - 'mjpeg' for MJPEG stream (iOS and Android) or 'avc' for H.264 stream (Android only)",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["mjpeg", "avc"],
+            "default": "mjpeg"
+          }
+        },
+        {
+          "name": "quality",
+          "description": "Video quality (only used for MJPEG format)",
+          "required": false,
+          "schema": {
+            "type": "integer"
+          }
+        },
+        {
+          "name": "scale",
+          "description": "Video scale factor",
+          "required": false,
+          "schema": {
+            "type": "number"
+          }
+        }
+      ],
+      "result": {
+        "name": "stream",
+        "description": "Video stream - multipart/x-mixed-replace for MJPEG or video/h264 for AVC",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    {
       "name": "device.screenrecord",
       "summary": "Start screen recording",
       "description": "Starts recording the device screen to an MP4 file. The recording runs asynchronously and must be stopped with device.screenrecord.stop.",

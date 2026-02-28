@@ -23,6 +23,7 @@ Remote device orchestration, automation and control
 - [device.io.tap](#deviceiotap)
 - [device.io.text](#deviceiotext)
 - [device.reboot](#devicereboot)
+- [device.screencapture](#devicescreencapture)
 - [device.screenrecord](#devicescreenrecord)
 - [device.screenrecord.stop](#devicescreenrecordstop)
 - [device.screenshot](#devicescreenshot)
@@ -615,6 +616,44 @@ Reboot operation result
   "method": "device.reboot",
   "params": {
     "deviceId": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.screencapture
+
+**Start screen capture streaming**
+
+Starts screen capture streaming for the specified device. Supports MJPEG (iOS and Android) and AVC/H.264 (Android only) formats.
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+| `format` | enum: `mjpeg, avc` |  | Video format - 'mjpeg' for MJPEG stream (iOS and Android) or 'avc' for H.264 stream (Android only) |
+| `quality` | `integer` |  | Video quality (only used for MJPEG format) |
+| `scale` | `number` |  | Video scale factor |
+
+#### Response
+
+**Type:** `string`
+
+Video stream - multipart/x-mixed-replace for MJPEG or video/h264 for AVC
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.screencapture",
+  "params": {
+    "deviceId": "string",
+    "format": "mjpeg",
+    "quality": 0,
+    "scale": 0
   },
   "id": 1
 }
