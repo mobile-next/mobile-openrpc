@@ -120,6 +120,7 @@ Launches an application by bundle ID on the specified device
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
 | `bundleId` | `string` | ✓ | Bundle ID of the application to launch |
+| `locales` | Array<`string`> |  | BCP 47 locale tags to set for the app (e.g. ["fr-FR", "en-GB"]). On iOS this is a per-launch argument. On Android 13+ this is persistent. |
 
 #### Response
 
@@ -135,7 +136,10 @@ Launch operation result
   "method": "device.apps.launch",
   "params": {
     "deviceId": "string",
-    "bundleId": "string"
+    "bundleId": "string",
+    "locales": [
+      "string"
+    ]
   },
   "id": 1
 }
