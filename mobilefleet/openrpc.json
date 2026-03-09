@@ -131,7 +131,7 @@
     {
       "name": "device.screenshot",
       "summary": "Take a screenshot of a device",
-      "description": "Captures a screenshot from the specified device and returns it as base64 data",
+      "description": "Captures a screenshot from the specified device. Returns screenshot as base64, or as signed url.",
       "params": [
         {
           "name": "deviceId",
@@ -159,6 +159,16 @@
             "type": "integer",
             "minimum": 1,
             "maximum": 100
+          }
+        },
+        {
+          "name": "encoding",
+          "description": "Response encoding. 'base64' returns inline data URI, 'url' uploads to S3 and returns a signed URL (15 min expiry)",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["base64", "url"],
+            "default": "base64"
           }
         }
       ],
@@ -744,6 +754,18 @@
           "schema": {
             "type": "string"
           }
+        },
+        {
+          "name": "locales",
+          "description": "BCP 47 locale tags to set for the app (e.g. [\"fr-FR\", \"en-GB\"]). On iOS this is a per-launch argument. On Android 13+ this is persistent.",
+          "required": false,
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?$"
+            }
+          }
         }
       ],
       "result": {
@@ -1064,6 +1086,16 @@
         "message": "Upload failed",
         "data": "Failed to generate upload URL"
       },
+      "ConcurrencyLimit": {
+        "code": -32023,
+        "message": "Concurrency limit reached",
+        "data": "Account has reached its maximum concurrent device allocations"
+      },
+      "AccountSuspended": {
+        "code": -32025,
+        "message": "Account suspended",
+        "data": "The user or account is not active"
+      },
       "DeviceTimeout": {
         "code": -32050,
         "message": "Device timeout",
@@ -1108,10 +1140,14 @@
           },
           "data": {
             "type": "string",
-            "description": "Base64 encoded image data with data URI prefix"
+            "description": "Base64 encoded image data with data URI prefix (present when encoding is 'base64')"
+          },
+          "url": {
+            "type": "string",
+            "description": "Signed S3 URL to the screenshot image, expires in 15 minutes (present when encoding is 'url')"
           }
         },
-        "required": ["format", "data"]
+        "required": ["format"]
       },
       "SuccessResult": {
         "type": "object",

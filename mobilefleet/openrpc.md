@@ -120,6 +120,7 @@ Launches an application by bundle ID on the specified device
 |------|------|----------|-------------|
 | `deviceId` | `string` | ✓ | ID of the target device |
 | `bundleId` | `string` | ✓ | Bundle ID of the application to launch |
+| `locales` | Array<`string`> |  | BCP 47 locale tags to set for the app (e.g. ["fr-FR", "en-GB"]). On iOS this is a per-launch argument. On Android 13+ this is persistent. |
 
 #### Response
 
@@ -135,7 +136,10 @@ Launch operation result
   "method": "device.apps.launch",
   "params": {
     "deviceId": "string",
-    "bundleId": "string"
+    "bundleId": "string",
+    "locales": [
+      "string"
+    ]
   },
   "id": 1
 }
@@ -734,7 +738,7 @@ Screen recording result
 
 **Take a screenshot of a device**
 
-Captures a screenshot from the specified device and returns it as base64 data
+Captures a screenshot from the specified device. Returns screenshot as base64, or as signed url.
 
 #### Parameters
 
@@ -743,6 +747,7 @@ Captures a screenshot from the specified device and returns it as base64 data
 | `deviceId` | `string` | ✓ | ID of the target device |
 | `format` | enum: `png, jpeg` |  | Image format (png or jpeg) |
 | `quality` | `integer` |  | Image quality (1-100, only used for JPEG) |
+| `encoding` | enum: `base64, url` |  | Response encoding. 'base64' returns inline data URI, 'url' uploads to S3 and returns a signed URL (15 min expiry) |
 
 #### Response
 
@@ -759,7 +764,8 @@ Screenshot data
   "params": {
     "deviceId": "string",
     "format": "png",
-    "quality": 1
+    "quality": 1,
+    "encoding": "base64"
   },
   "id": 1
 }
@@ -1127,6 +1133,8 @@ Upload details
 | `-32040` | **InvalidFilename** | Invalid filename | Filename contains invalid characters |
 | `-32041` | **InvalidFileSize** | Invalid file size | File size must be a positive number |
 | `-32042` | **UploadFailed** | Upload failed | Failed to generate upload URL |
+| `-32023` | **ConcurrencyLimit** | Concurrency limit reached | Account has reached its maximum concurrent device allocations |
+| `-32025` | **AccountSuspended** | Account suspended | The user or account is not active |
 | `-32050` | **DeviceTimeout** | Device timeout | The device did not respond in time |
 
 ## Schemas
@@ -1207,7 +1215,8 @@ Detailed device information
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | `format` | enum: `png, jpeg` | ✓ | Image format |
-| `data` | `string` | ✓ | Base64 encoded image data with data URI prefix |
+| `data` | `string` |  | Base64 encoded image data with data URI prefix (present when encoding is 'base64') |
+| `url` | `string` |  | Signed S3 URL to the screenshot image, expires in 15 minutes (present when encoding is 'url') |
 
 ### SuccessResult
 
