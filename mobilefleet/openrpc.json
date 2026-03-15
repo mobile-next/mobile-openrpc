@@ -1100,6 +1100,11 @@
         "code": -32050,
         "message": "Device timeout",
         "data": "The device did not respond in time"
+      },
+      "InsufficientCredits": {
+        "code": -32026,
+        "message": "Insufficient credits",
+        "data": "Account does not have enough credits to allocate a device"
       }
     },
     "schemas": {
