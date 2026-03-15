@@ -871,7 +871,11 @@ This is a notification — no response is expected
         "name": "string",
         "platform": "ios",
         "status": "string",
-        "model": "string"
+        "model": "string",
+        "provider": {
+          "type": "string",
+          "sessionId": "string"
+        }
       }
     ],
     "removed": [
@@ -880,7 +884,11 @@ This is a notification — no response is expected
         "name": "string",
         "platform": "ios",
         "status": "string",
-        "model": "string"
+        "model": "string",
+        "provider": {
+          "type": "string",
+          "sessionId": "string"
+        }
       }
     ],
     "updated": [
@@ -889,7 +897,11 @@ This is a notification — no response is expected
         "name": "string",
         "platform": "ios",
         "status": "string",
-        "model": "string"
+        "model": "string",
+        "provider": {
+          "type": "string",
+          "sessionId": "string"
+        }
       }
     ]
   },
@@ -1148,6 +1160,7 @@ Upload details
 | `platform` | enum: `ios, android` | ✓ | Device platform |
 | `status` | `string` | ✓ | Device connection status |
 | `model` | `string` | ✓ | Device model |
+| `provider` | [`DeviceProvider`](#deviceprovider) |  | Provider information for this device |
 
 ### DeviceFilter
 
@@ -1192,6 +1205,15 @@ A filter criterion for device selection. Multiple filters are ANDed together. Wh
 Detailed device information
 
 `object`
+
+### DeviceProvider
+
+Describes where the device is provided from
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `type` | `string` | ✓ | Provider type (e.g. 'mobilefleet') |
+| `sessionId` | `string` |  | Session identifier for this device allocation |
 
 ### FleetDevice
 

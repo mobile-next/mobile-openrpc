@@ -872,9 +872,28 @@
           "model": {
             "type": "string",
             "description": "Device model"
+          },
+          "provider": {
+            "$ref": "#/components/schemas/DeviceProvider",
+            "description": "Provider information for this device"
           }
         },
         "required": ["id", "name", "platform", "status", "model"]
+      },
+      "DeviceProvider": {
+        "type": "object",
+        "description": "Describes where the device is provided from",
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Provider type (e.g. 'mobilefleet', 'local')"
+          },
+          "sessionId": {
+            "type": "string",
+            "description": "Session identifier for this device allocation"
+          }
+        },
+        "required": ["type"]
       },
       "ScreenshotResult": {
         "type": "object",

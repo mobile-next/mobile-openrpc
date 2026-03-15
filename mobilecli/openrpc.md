@@ -908,12 +908,22 @@ Operation result
 | `platform` | enum: `ios, android` | ✓ | Device platform |
 | `status` | `string` | ✓ | Device connection status |
 | `model` | `string` | ✓ | Device model |
+| `provider` | [`DeviceProvider`](#deviceprovider) |  | Provider information for this device |
 
 ### DeviceInfo
 
 Detailed device information
 
 `object`
+
+### DeviceProvider
+
+Describes where the device is provided from
+
+| Property | Type | Required | Description |
+|----------|------|----------|-------------|
+| `type` | `string` | ✓ | Provider type (e.g. 'mobilefleet', 'local') |
+| `sessionId` | `string` |  | Session identifier for this device allocation |
 
 ### ScreenshotResult
 
