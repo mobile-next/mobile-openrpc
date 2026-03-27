@@ -1148,6 +1148,7 @@ Upload details
 | `-32023` | **ConcurrencyLimit** | Concurrency limit reached | Account has reached its maximum concurrent device allocations |
 | `-32025` | **AccountSuspended** | Account suspended | The user or account is not active |
 | `-32050` | **DeviceTimeout** | Device timeout | The device did not respond in time |
+| `-32026` | **InsufficientCredits** | Insufficient credits | Account does not have enough credits to allocate a device |
 
 ## Schemas
 

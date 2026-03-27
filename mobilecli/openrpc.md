@@ -13,6 +13,8 @@ JSON-RPC API for mobile device automation and control
 - [device.apps.terminate](#deviceappsterminate)
 - [device.apps.uninstall](#deviceappsuninstall)
 - [device.boot](#deviceboot)
+- [device.crashes.get](#devicecrashesget)
+- [device.crashes.list](#devicecrasheslist)
 - [device.dump.ui](#devicedumpui)
 - [device.info](#deviceinfo)
 - [device.io.button](#deviceiobutton)
@@ -270,6 +272,72 @@ Boot operation result
 {
   "jsonrpc": "2.0",
   "method": "device.boot",
+  "params": {
+    "deviceId": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.crashes.get
+
+**Get a crash report**
+
+Returns the full content of a specific crash report by ID. The ID is obtained from device.crashes.list.
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` |  | ID of the target device (optional - will auto-select if not provided) |
+| `id` | `string` | ✓ | Crash report ID (from device.crashes.list) |
+
+#### Response
+
+**Type:** `object`
+
+Crash report content
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.crashes.get",
+  "params": {
+    "deviceId": "string",
+    "id": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.crashes.list
+
+**List crash reports**
+
+Returns a list of crash reports from the specified device. Supports iOS real devices (via crashreport service), iOS simulators (reads from DiagnosticReports), and Android devices (parses adb logcat crash buffer).
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` |  | ID of the target device (optional - will auto-select if not provided) |
+
+#### Response
+
+**Type:** Array<`object`>
+
+List of crash reports
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.crashes.list",
   "params": {
     "deviceId": "string"
   },
