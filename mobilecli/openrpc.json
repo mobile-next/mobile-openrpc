@@ -642,7 +642,14 @@
         "name": "terminateResult",
         "description": "Terminate operation result",
         "schema": {
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "terminated": {
+              "type": "boolean",
+              "description": "True if the app was running and got terminated, false if it was not running"
+            }
+          },
+          "required": ["terminated"]
         }
       }
     },
@@ -764,6 +771,36 @@
         {
           "name": "bundleId",
           "description": "Bundle identifier (iOS) or package name (Android) of the application to uninstall",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.apps.clear",
+      "summary": "Clear application data",
+      "description": "Clears all data (cache, preferences, databases) for an application without uninstalling it. Supported on Android and iOS Simulator. Not supported on real iOS devices.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle identifier (iOS) or package name (Android) of the application to clear",
           "required": true,
           "schema": {
             "type": "string"

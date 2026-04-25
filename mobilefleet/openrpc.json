@@ -802,7 +802,14 @@
         "name": "terminateResult",
         "description": "Terminate operation result",
         "schema": {
-          "type": "object"
+          "type": "object",
+          "properties": {
+            "terminated": {
+              "type": "boolean",
+              "description": "True if the app was running and got terminated, false if it was not running"
+            }
+          },
+          "required": ["terminated"]
         }
       }
     },
@@ -880,6 +887,147 @@
         "description": "Install operation result",
         "schema": {
           "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.apps.uninstall",
+      "summary": "Uninstall an application",
+      "description": "Uninstalls an application from the specified device by its bundle/package ID",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle identifier (iOS) or package name (Android) of the application to uninstall",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.apps.clear",
+      "summary": "Clear application data",
+      "description": "Clears all data (cache, preferences, databases) for an application without uninstalling it. Supported on Android and iOS Simulator. Not supported on real iOS devices.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle identifier (iOS) or package name (Android) of the application to clear",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
+      }
+    },
+    {
+      "name": "device.crashes.list",
+      "summary": "List crash reports",
+      "description": "Returns a list of crash reports from the specified device. Supports iOS real devices (via crashreport service), iOS simulators (reads from DiagnosticReports), and Android devices (parses adb logcat crash buffer).",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "crashes",
+        "description": "List of crash reports",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "processName": {
+                "type": "string",
+                "description": "Name of the process that crashed"
+              },
+              "timestamp": {
+                "type": "string",
+                "description": "Timestamp of the crash"
+              },
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for the crash report, used with device.crashes.get"
+              }
+            },
+            "required": ["processName", "timestamp", "id"]
+          }
+        }
+      }
+    },
+    {
+      "name": "device.crashes.get",
+      "summary": "Get a crash report",
+      "description": "Returns the full content of a specific crash report by ID. The ID is obtained from device.crashes.list.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        },
+        {
+          "name": "id",
+          "description": "Crash report ID (from device.crashes.list)",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "result": {
+        "name": "crashReport",
+        "description": "Crash report content",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "description": "Crash report ID"
+            },
+            "content": {
+              "type": "string",
+              "description": "Full crash report text"
+            }
+          },
+          "required": ["id", "content"]
         }
       }
     },
