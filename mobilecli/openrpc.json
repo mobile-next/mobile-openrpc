@@ -951,66 +951,6 @@
       }
     },
     {
-      "name": "device.webview.attach",
-      "summary": "Attach to a webview",
-      "description": "Allocates a session for the given webview and injects the bridge shim. Returns a session ID used by all subsequent webview calls.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "id",
-          "description": "Webview ID from device.webview.list",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "result": {
-        "name": "session",
-        "description": "Webview session",
-        "schema": {
-          "$ref": "#/components/schemas/WebViewSession"
-        }
-      }
-    },
-    {
-      "name": "device.webview.detach",
-      "summary": "Detach from a webview",
-      "description": "Releases the session and frees server-side state. The session ID is invalid after this call.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID from device.webview.attach",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": {
-          "$ref": "#/components/schemas/SuccessResult"
-        }
-      }
-    },
-    {
       "name": "device.webview.goto",
       "summary": "Navigate webview to URL",
       "description": "Navigates the attached webview to the given URL and optionally waits for a load state.",
@@ -1024,8 +964,8 @@
           }
         },
         {
-          "name": "sessionId",
-          "description": "Webview session ID",
+          "name": "id",
+          "description": "WebView ID from device.webview.list",
           "required": true,
           "schema": {
             "type": "string"
@@ -1075,8 +1015,8 @@
           }
         },
         {
-          "name": "sessionId",
-          "description": "Webview session ID",
+          "name": "id",
+          "description": "WebView ID from device.webview.list",
           "required": true,
           "schema": {
             "type": "string"
@@ -1118,8 +1058,8 @@
           }
         },
         {
-          "name": "sessionId",
-          "description": "Webview session ID",
+          "name": "id",
+          "description": "WebView ID from device.webview.list",
           "required": true,
           "schema": {
             "type": "string"
@@ -1148,8 +1088,8 @@
           }
         },
         {
-          "name": "sessionId",
-          "description": "Webview session ID",
+          "name": "id",
+          "description": "WebView ID from device.webview.list",
           "required": true,
           "schema": {
             "type": "string"
@@ -1178,8 +1118,8 @@
           }
         },
         {
-          "name": "sessionId",
-          "description": "Webview session ID",
+          "name": "id",
+          "description": "WebView ID from device.webview.list",
           "required": true,
           "schema": {
             "type": "string"
@@ -1227,8 +1167,8 @@
           }
         },
         {
-          "name": "sessionId",
-          "description": "Webview session ID",
+          "name": "id",
+          "description": "WebView ID from device.webview.list",
           "required": true,
           "schema": {
             "type": "string"
@@ -1541,19 +1481,6 @@
           "bundleId",
           "bounds",
           "isVisible"
-        ]
-      },
-      "WebViewSession": {
-        "type": "object",
-        "description": "Session handle returned by device.webview.attach",
-        "properties": {
-          "sessionId": {
-            "type": "string",
-            "description": "Opaque session identifier used by all subsequent webview calls"
-          }
-        },
-        "required": [
-          "sessionId"
         ]
       }
     }
