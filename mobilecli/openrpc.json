@@ -1426,63 +1426,6 @@
       }
     },
     {
-      "name": "device.webview.waitForUrl",
-      "summary": "Wait for webview URL",
-      "description": "Polls server-side until the attached webview's URL matches the given pattern or the timeout elapses.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "url",
-          "description": "URL to match. Either a literal string or a JavaScript regex source (without delimiters).",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "isRegex",
-          "description": "Treat url as a regex source instead of a literal string",
-          "required": false,
-          "schema": {
-            "type": "boolean",
-            "default": false
-          }
-        },
-        {
-          "name": "timeout",
-          "description": "Timeout in milliseconds",
-          "required": false,
-          "schema": {
-            "type": "integer",
-            "minimum": 0,
-            "default": 30000
-          }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": {
-          "$ref": "#/components/schemas/SuccessResult"
-        }
-      }
-    },
-    {
       "name": "server.info",
       "summary": "Get server information",
       "description": "Returns the server name and version",
