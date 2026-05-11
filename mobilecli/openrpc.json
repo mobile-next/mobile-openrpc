@@ -897,6 +897,985 @@
       }
     },
     {
+      "name": "device.webview.list",
+      "summary": "List webviews",
+      "description": "Returns all embedded webviews currently visible in the foreground app on the device. Browser apps (Safari, Chrome) are not included.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "webviews",
+        "description": "List of embedded webviews",
+        "schema": {
+          "type": "array",
+          "items": { "$ref": "#/components/schemas/WebView" }
+        }
+      }
+    },
+    {
+      "name": "device.webview.attach",
+      "summary": "Attach to a webview",
+      "description": "Allocates a session for the given webview and injects the bridge shim. Returns a session ID used by all subsequent webview calls.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "id",
+          "description": "Webview ID from device.webview.list",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "session",
+        "description": "Webview session",
+        "schema": { "$ref": "#/components/schemas/WebViewSession" }
+      }
+    },
+    {
+      "name": "device.webview.detach",
+      "summary": "Detach from a webview",
+      "description": "Releases the session and frees server-side state. The session ID is invalid after this call.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID from device.webview.attach",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.url",
+      "summary": "Get webview URL",
+      "description": "Returns the current top-level URL of the attached webview.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "url",
+        "description": "Current URL",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "url": { "type": "string" }
+          },
+          "required": ["url"]
+        }
+      }
+    },
+    {
+      "name": "device.webview.title",
+      "summary": "Get webview title",
+      "description": "Returns document.title of the attached webview.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "title",
+        "description": "Document title",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" }
+          },
+          "required": ["title"]
+        }
+      }
+    },
+    {
+      "name": "device.webview.goto",
+      "summary": "Navigate webview to URL",
+      "description": "Navigates the attached webview to the given URL and optionally waits for a load state.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "url",
+          "description": "URL to navigate to",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "waitUntil",
+          "description": "Load state to wait for after navigation",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["load", "domcontentloaded"],
+            "default": "load"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.reload",
+      "summary": "Reload webview",
+      "description": "Reloads the current page in the attached webview.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "waitUntil",
+          "description": "Load state to wait for after reload",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["load", "domcontentloaded"],
+            "default": "load"
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.goBack",
+      "summary": "Navigate back in webview history",
+      "description": "Navigates one step back in the attached webview's session history.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.goForward",
+      "summary": "Navigate forward in webview history",
+      "description": "Navigates one step forward in the attached webview's session history.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.content",
+      "summary": "Get webview HTML content",
+      "description": "Returns the outerHTML of the attached webview's <html> element.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "content",
+        "description": "Webview HTML content",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "html": { "type": "string" }
+          },
+          "required": ["html"]
+        }
+      }
+    },
+    {
+      "name": "device.webview.screenshot",
+      "summary": "Capture webview screenshot",
+      "description": "Captures a screenshot of the attached webview's region only and returns it as base64 data.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "format",
+          "description": "Image format (png or jpeg)",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["png", "jpeg"],
+            "default": "png"
+          }
+        },
+        {
+          "name": "quality",
+          "description": "Image quality (1-100, only used for JPEG)",
+          "required": false,
+          "schema": { "type": "integer", "minimum": 1, "maximum": 100 }
+        }
+      ],
+      "result": {
+        "name": "screenshot",
+        "description": "Screenshot data",
+        "schema": { "$ref": "#/components/schemas/ScreenshotResult" }
+      }
+    },
+    {
+      "name": "device.webview.evaluate",
+      "summary": "Evaluate JavaScript in webview",
+      "description": "Evaluates a JavaScript expression in the attached webview and returns the JSON-serialized result. Throws WebViewEvaluateError if the script throws.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "expression",
+          "description": "JavaScript expression to evaluate. May be a function body invoked with args.",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "args",
+          "description": "Arguments passed to the expression when it is a function body",
+          "required": false,
+          "schema": { "type": "array" }
+        }
+      ],
+      "result": {
+        "name": "evaluateResult",
+        "description": "Serialized return value",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "result": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "device.webview.waitForLoadState",
+      "summary": "Wait for webview load state",
+      "description": "Polls the attached webview server-side until the requested load state is reached or the timeout elapses.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "state",
+          "description": "Load state to wait for",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "enum": ["load", "domcontentloaded"],
+            "default": "load"
+          }
+        },
+        {
+          "name": "timeout",
+          "description": "Timeout in milliseconds",
+          "required": false,
+          "schema": { "type": "integer", "minimum": 0, "default": 30000 }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.waitForUrl",
+      "summary": "Wait for webview URL",
+      "description": "Polls server-side until the attached webview's URL matches the given pattern or the timeout elapses.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "url",
+          "description": "URL to match. Either a literal string or a JavaScript regex source (without delimiters).",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "isRegex",
+          "description": "Treat url as a regex source instead of a literal string",
+          "required": false,
+          "schema": { "type": "boolean", "default": false }
+        },
+        {
+          "name": "timeout",
+          "description": "Timeout in milliseconds",
+          "required": false,
+          "schema": { "type": "integer", "minimum": 0, "default": 30000 }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.query",
+      "summary": "Query DOM elements in webview",
+      "description": "Resolves DOM elements in the attached webview using one of the supported strategies. Returns server-allocated node IDs that remain valid until the DOM mutates or the session ends.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "root",
+          "description": "Optional ancestor node ID to scope the search",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "strategy",
+          "description": "Selection strategy",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": ["css", "role", "text", "label", "placeholder", "testId", "altText", "title"]
+          }
+        },
+        {
+          "name": "value",
+          "description": "Strategy value (e.g. CSS selector, role name, text)",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "options",
+          "description": "Strategy-specific options (e.g. exact, name)",
+          "required": false,
+          "schema": { "type": "object", "additionalProperties": true }
+        },
+        {
+          "name": "all",
+          "description": "If true, return every match; otherwise return at most one",
+          "required": false,
+          "schema": { "type": "boolean", "default": false }
+        }
+      ],
+      "result": {
+        "name": "queryResult",
+        "description": "Matching node IDs",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "nodes": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          },
+          "required": ["nodes"]
+        }
+      }
+    },
+    {
+      "name": "device.webview.element.click",
+      "summary": "Click webview element",
+      "description": "Clicks the given DOM element. Auto-waits for the element to be actionable (visible, enabled, stable) before dispatching.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID from device.webview.query",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "options",
+          "description": "Click options (button, clickCount, force, etc)",
+          "required": false,
+          "schema": { "type": "object", "additionalProperties": true }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.fill",
+      "summary": "Fill webview input element",
+      "description": "Clears the input element's value and types the given value into it.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID of the input element",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "value",
+          "description": "Value to set",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.type",
+      "summary": "Type into webview element",
+      "description": "Appends the given text to the focused element. Does not clear existing content.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID to focus and type into",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "text",
+          "description": "Text to type",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.press",
+      "summary": "Press a key on a webview element",
+      "description": "Dispatches a keyboard event to the given element (e.g. 'Enter', 'ArrowDown', 'a').",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID to dispatch the key to",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "key",
+          "description": "Key name following the W3C UI Events KeyboardEvent.key spec",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.hover",
+      "summary": "Hover over webview element",
+      "description": "Dispatches mouseenter/mouseover/mousemove events at the center of the given element.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID to hover",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.focus",
+      "summary": "Focus webview element",
+      "description": "Calls focus() on the given element.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID to focus",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.scrollIntoView",
+      "summary": "Scroll webview element into view",
+      "description": "Calls scrollIntoView({ block: 'center', inline: 'center' }) on the given element.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID to scroll into view",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.check",
+      "summary": "Set checked state on a webview checkbox or radio",
+      "description": "Sets the checked state of a checkbox or radio input. No-op if the element is already in the requested state.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID of the checkbox or radio",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "checked",
+          "description": "Desired checked state",
+          "required": true,
+          "schema": { "type": "boolean" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.selectOption",
+      "summary": "Select options in a webview <select>",
+      "description": "Selects one or more options in a <select> element by value. For single-select, only the first value is used.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID of the <select> element",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "values",
+          "description": "Option values to select",
+          "required": true,
+          "schema": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.webview.element.inspect",
+      "summary": "Inspect webview element state",
+      "description": "Returns a bundled snapshot of the element's common state in a single round-trip: text, value, attributes, bounding box, and visibility/enabled/checked flags.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID to inspect",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "elementState",
+        "description": "Element state snapshot",
+        "schema": { "$ref": "#/components/schemas/WebViewElementState" }
+      }
+    },
+    {
+      "name": "device.webview.element.getAttribute",
+      "summary": "Get a webview element attribute",
+      "description": "Returns the value of the given DOM attribute, or null if the attribute is not set.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "name",
+          "description": "Attribute name",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "attributeValue",
+        "description": "Attribute value, or null when the attribute is not set",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "Attribute value as a string, or null"
+            }
+          },
+          "required": ["value"]
+        }
+      }
+    },
+    {
+      "name": "device.webview.element.getProperty",
+      "summary": "Get a webview element JS property",
+      "description": "Returns the JSON-serialized value of the given DOM property (e.g. 'value', 'checked', 'innerText').",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "name",
+          "description": "Property name",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "propertyValue",
+        "description": "Serialized property value",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "value": {}
+          }
+        }
+      }
+    },
+    {
+      "name": "device.webview.element.waitFor",
+      "summary": "Wait for webview element state",
+      "description": "Polls server-side until the given element matches the requested state or the timeout elapses.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "sessionId",
+          "description": "Webview session ID",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "nodeId",
+          "description": "Node ID to wait on",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "state",
+          "description": "State to wait for",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "enum": ["visible", "hidden", "attached", "detached", "enabled", "disabled"]
+          }
+        },
+        {
+          "name": "timeout",
+          "description": "Timeout in milliseconds",
+          "required": false,
+          "schema": { "type": "integer", "minimum": 0, "default": 30000 }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
       "name": "server.info",
       "summary": "Get server information",
       "description": "Returns the server name and version",
@@ -964,6 +1943,31 @@
         "code": -32050,
         "message": "Device timeout",
         "data": "The device did not respond in time"
+      },
+      "WebViewNotFound": {
+        "code": -32100,
+        "message": "Webview not found",
+        "data": "The supplied webview id does not match any currently-attached webview"
+      },
+      "WebViewSessionExpired": {
+        "code": -32101,
+        "message": "Webview session expired",
+        "data": "The session is no longer valid; the client must re-attach to the webview"
+      },
+      "WebViewNodeNotFound": {
+        "code": -32102,
+        "message": "Webview node not found",
+        "data": "The supplied node id is stale because the DOM has mutated; the client must re-query"
+      },
+      "WebViewNavigationFailed": {
+        "code": -32103,
+        "message": "Webview navigation failed",
+        "data": "The webview did not reach the requested load state in time"
+      },
+      "WebViewEvaluateError": {
+        "code": -32104,
+        "message": "Webview evaluate error",
+        "data": "The script passed to device.webview.evaluate threw an exception"
       }
     },
     "schemas": {
@@ -1057,6 +2061,109 @@
           }
         },
         "required": ["name", "version"]
+      },
+      "Rect": {
+        "type": "object",
+        "description": "Rectangle in pixels",
+        "properties": {
+          "x": { "type": "integer" },
+          "y": { "type": "integer" },
+          "width": { "type": "integer" },
+          "height": { "type": "integer" }
+        },
+        "required": ["x", "y", "width", "height"]
+      },
+      "WebView": {
+        "type": "object",
+        "description": "An embedded webview attached to the foreground app",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable handle for this webview within the device session"
+          },
+          "url": {
+            "type": "string",
+            "description": "Current top-level URL"
+          },
+          "title": {
+            "type": "string",
+            "description": "document.title"
+          },
+          "bundleId": {
+            "type": "string",
+            "description": "Bundle ID (iOS) or package name (Android) of the host app"
+          },
+          "processName": {
+            "type": "string",
+            "description": "Host process name or identifier"
+          },
+          "bounds": {
+            "$ref": "#/components/schemas/Rect",
+            "description": "Webview position on screen, in screen coordinates"
+          },
+          "isVisible": {
+            "type": "boolean",
+            "description": "True when the webview has non-zero on-screen bounds"
+          }
+        },
+        "required": ["id", "url", "title", "bundleId", "bounds", "isVisible"]
+      },
+      "WebViewSession": {
+        "type": "object",
+        "description": "Session handle returned by device.webview.attach",
+        "properties": {
+          "sessionId": {
+            "type": "string",
+            "description": "Opaque session identifier used by all subsequent webview calls"
+          }
+        },
+        "required": ["sessionId"]
+      },
+      "WebViewBoundingBox": {
+        "type": "object",
+        "description": "Element bounds in two coordinate spaces so the client can compose with native locator bounds",
+        "properties": {
+          "screen": {
+            "$ref": "#/components/schemas/Rect",
+            "description": "Element bounds in screen coordinates"
+          },
+          "frame": {
+            "$ref": "#/components/schemas/Rect",
+            "description": "Element bounds relative to the webview's own viewport"
+          }
+        },
+        "required": ["screen", "frame"]
+      },
+      "WebViewElementState": {
+        "type": "object",
+        "description": "Bundled element state returned by device.webview.element.inspect",
+        "properties": {
+          "text": {
+            "type": "string",
+            "description": "Element innerText"
+          },
+          "value": {
+            "type": "string",
+            "description": "Input value (only present for form elements)"
+          },
+          "attributes": {
+            "type": "object",
+            "description": "DOM attributes as a name -> string-value map",
+            "additionalProperties": { "type": "string" }
+          },
+          "boundingBox": {
+            "$ref": "#/components/schemas/WebViewBoundingBox"
+          },
+          "isVisible": { "type": "boolean" },
+          "isHidden": { "type": "boolean" },
+          "isEnabled": { "type": "boolean" },
+          "isDisabled": { "type": "boolean" },
+          "isChecked": {
+            "type": "boolean",
+            "description": "Only present for checkboxes and radios"
+          }
+        },
+        "required": ["text", "attributes", "boundingBox", "isVisible", "isHidden", "isEnabled", "isDisabled"]
       }
     }
   }

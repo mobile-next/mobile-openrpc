@@ -6,12 +6,16 @@ Remote device orchestration, automation and control
 
 ## Table of Contents
 
+- [device.apps.clear](#deviceappsclear)
 - [device.apps.foreground](#deviceappsforeground)
 - [device.apps.install](#deviceappsinstall)
 - [device.apps.launch](#deviceappslaunch)
 - [device.apps.list](#deviceappslist)
 - [device.apps.terminate](#deviceappsterminate)
+- [device.apps.uninstall](#deviceappsuninstall)
 - [device.boot](#deviceboot)
+- [device.crashes.get](#devicecrashesget)
+- [device.crashes.list](#devicecrasheslist)
 - [device.dump.ui](#devicedumpui)
 - [device.info](#deviceinfo)
 - [device.io.button](#deviceiobutton)
@@ -41,6 +45,40 @@ Remote device orchestration, automation and control
 - [Schemas](#schemas)
 
 ## Methods
+
+### device.apps.clear
+
+**Clear application data**
+
+Clears all data (cache, preferences, databases) for an application without uninstalling it. Supported on Android and iOS Simulator. Not supported on real iOS devices.
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+| `bundleId` | `string` | ✓ | Bundle identifier (iOS) or package name (Android) of the application to clear |
+
+#### Response
+
+**Type:** [`SuccessResult`](#successresult)
+
+Operation result
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.apps.clear",
+  "params": {
+    "deviceId": "string",
+    "bundleId": "string"
+  },
+  "id": 1
+}
+```
+
 
 ### device.apps.foreground
 
@@ -212,6 +250,40 @@ Terminate operation result
 ```
 
 
+### device.apps.uninstall
+
+**Uninstall an application**
+
+Uninstalls an application from the specified device by its bundle/package ID
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+| `bundleId` | `string` | ✓ | Bundle identifier (iOS) or package name (Android) of the application to uninstall |
+
+#### Response
+
+**Type:** [`SuccessResult`](#successresult)
+
+Operation result
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.apps.uninstall",
+  "params": {
+    "deviceId": "string",
+    "bundleId": "string"
+  },
+  "id": 1
+}
+```
+
+
 ### device.boot
 
 **Boot a device**
@@ -236,6 +308,72 @@ Boot operation result
 {
   "jsonrpc": "2.0",
   "method": "device.boot",
+  "params": {
+    "deviceId": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.crashes.get
+
+**Get a crash report**
+
+Returns the full content of a specific crash report by ID. The ID is obtained from device.crashes.list.
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+| `id` | `string` | ✓ | Crash report ID (from device.crashes.list) |
+
+#### Response
+
+**Type:** `object`
+
+Crash report content
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.crashes.get",
+  "params": {
+    "deviceId": "string",
+    "id": "string"
+  },
+  "id": 1
+}
+```
+
+
+### device.crashes.list
+
+**List crash reports**
+
+Returns a list of crash reports from the specified device. Supports iOS real devices (via crashreport service), iOS simulators (reads from DiagnosticReports), and Android devices (parses adb logcat crash buffer).
+
+#### Parameters
+
+| Name | Type | Required | Description |
+|------|------|----------|-------------|
+| `deviceId` | `string` | ✓ | ID of the target device |
+
+#### Response
+
+**Type:** Array<`object`>
+
+List of crash reports
+
+#### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "method": "device.crashes.list",
   "params": {
     "deviceId": "string"
   },

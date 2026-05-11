@@ -1,0 +1,4 @@
+#!/bin/sh
+
+npx ~/git/jagger mobilecli/openrpc.json -f markdown -o mobilecli/openrpc.md
+npx ~/git/jagger mobilefleet/openrpc.json -f markdown -o mobilefleet/openrpc.md
