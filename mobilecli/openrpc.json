@@ -87,6 +87,14 @@
             "minimum": 1,
             "maximum": 100
           }
+        },
+        {
+          "name": "clip",
+          "description": "Optional rectangle to crop the screenshot to, in screen coordinates",
+          "required": false,
+          "schema": {
+            "$ref": "#/components/schemas/Rect"
+          }
         }
       ],
       "result": {
@@ -1267,59 +1275,6 @@
           "required": [
             "html"
           ]
-        }
-      }
-    },
-    {
-      "name": "device.webview.screenshot",
-      "summary": "Capture webview screenshot",
-      "description": "Captures a screenshot of the attached webview's region only and returns it as base64 data.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "format",
-          "description": "Image format (png or jpeg)",
-          "required": false,
-          "schema": {
-            "type": "string",
-            "enum": [
-              "png",
-              "jpeg"
-            ],
-            "default": "png"
-          }
-        },
-        {
-          "name": "quality",
-          "description": "Image quality (1-100, only used for JPEG)",
-          "required": false,
-          "schema": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 100
-          }
-        }
-      ],
-      "result": {
-        "name": "screenshot",
-        "description": "Screenshot data",
-        "schema": {
-          "$ref": "#/components/schemas/ScreenshotResult"
         }
       }
     },
