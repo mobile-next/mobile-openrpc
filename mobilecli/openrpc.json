@@ -26,7 +26,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["ios", "android"]
+            "enum": [
+              "ios",
+              "android"
+            ]
           }
         },
         {
@@ -68,7 +71,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["png", "jpeg"],
+            "enum": [
+              "png",
+              "jpeg"
+            ],
             "default": "png"
           }
         },
@@ -110,7 +116,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["mjpeg", "avc"],
+            "enum": [
+              "mjpeg",
+              "avc"
+            ],
             "default": "mjpeg"
           }
         },
@@ -561,7 +570,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["json", "raw"],
+            "enum": [
+              "json",
+              "raw"
+            ],
             "default": "json"
           }
         }
@@ -649,7 +661,9 @@
               "description": "True if the app was running and got terminated, false if it was not running"
             }
           },
-          "required": ["terminated"]
+          "required": [
+            "terminated"
+          ]
         }
       }
     },
@@ -850,7 +864,11 @@
                 "description": "Unique identifier for the crash report, used with device.crashes.get"
               }
             },
-            "required": ["processName", "timestamp", "id"]
+            "required": [
+              "processName",
+              "timestamp",
+              "id"
+            ]
           }
         }
       }
@@ -892,7 +910,10 @@
               "description": "Full crash report text"
             }
           },
-          "required": ["id", "content"]
+          "required": [
+            "id",
+            "content"
+          ]
         }
       }
     },
@@ -905,7 +926,9 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
@@ -913,7 +936,9 @@
         "description": "List of embedded webviews",
         "schema": {
           "type": "array",
-          "items": { "$ref": "#/components/schemas/WebView" }
+          "items": {
+            "$ref": "#/components/schemas/WebView"
+          }
         }
       }
     },
@@ -926,19 +951,25 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "id",
           "description": "Webview ID from device.webview.list",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
         "name": "session",
         "description": "Webview session",
-        "schema": { "$ref": "#/components/schemas/WebViewSession" }
+        "schema": {
+          "$ref": "#/components/schemas/WebViewSession"
+        }
       }
     },
     {
@@ -950,19 +981,25 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID from device.webview.attach",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
         "name": "success",
         "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
       }
     },
     {
@@ -974,13 +1011,17 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
@@ -989,9 +1030,13 @@
         "schema": {
           "type": "object",
           "properties": {
-            "url": { "type": "string" }
+            "url": {
+              "type": "string"
+            }
           },
-          "required": ["url"]
+          "required": [
+            "url"
+          ]
         }
       }
     },
@@ -1004,13 +1049,17 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
@@ -1019,9 +1068,13 @@
         "schema": {
           "type": "object",
           "properties": {
-            "title": { "type": "string" }
+            "title": {
+              "type": "string"
+            }
           },
-          "required": ["title"]
+          "required": [
+            "title"
+          ]
         }
       }
     },
@@ -1034,19 +1087,25 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "url",
           "description": "URL to navigate to",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "waitUntil",
@@ -1054,7 +1113,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["load", "domcontentloaded"],
+            "enum": [
+              "load",
+              "domcontentloaded"
+            ],
             "default": "load"
           }
         }
@@ -1062,7 +1124,9 @@
       "result": {
         "name": "success",
         "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
       }
     },
     {
@@ -1074,13 +1138,17 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "waitUntil",
@@ -1088,7 +1156,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["load", "domcontentloaded"],
+            "enum": [
+              "load",
+              "domcontentloaded"
+            ],
             "default": "load"
           }
         }
@@ -1096,7 +1167,9 @@
       "result": {
         "name": "success",
         "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
       }
     },
     {
@@ -1108,19 +1181,25 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
         "name": "success",
         "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
       }
     },
     {
@@ -1132,19 +1211,25 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
         "name": "success",
         "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
       }
     },
     {
@@ -1156,13 +1241,17 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         }
       ],
       "result": {
@@ -1171,9 +1260,13 @@
         "schema": {
           "type": "object",
           "properties": {
-            "html": { "type": "string" }
+            "html": {
+              "type": "string"
+            }
           },
-          "required": ["html"]
+          "required": [
+            "html"
+          ]
         }
       }
     },
@@ -1186,13 +1279,17 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "format",
@@ -1200,7 +1297,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["png", "jpeg"],
+            "enum": [
+              "png",
+              "jpeg"
+            ],
             "default": "png"
           }
         },
@@ -1208,13 +1308,19 @@
           "name": "quality",
           "description": "Image quality (1-100, only used for JPEG)",
           "required": false,
-          "schema": { "type": "integer", "minimum": 1, "maximum": 100 }
+          "schema": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
         }
       ],
       "result": {
         "name": "screenshot",
         "description": "Screenshot data",
-        "schema": { "$ref": "#/components/schemas/ScreenshotResult" }
+        "schema": {
+          "$ref": "#/components/schemas/ScreenshotResult"
+        }
       }
     },
     {
@@ -1226,25 +1332,33 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "expression",
           "description": "JavaScript expression to evaluate. May be a function body invoked with args.",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "args",
           "description": "Arguments passed to the expression when it is a function body",
           "required": false,
-          "schema": { "type": "array" }
+          "schema": {
+            "type": "array"
+          }
         }
       ],
       "result": {
@@ -1267,13 +1381,17 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "state",
@@ -1281,7 +1399,10 @@
           "required": false,
           "schema": {
             "type": "string",
-            "enum": ["load", "domcontentloaded"],
+            "enum": [
+              "load",
+              "domcontentloaded"
+            ],
             "default": "load"
           }
         },
@@ -1289,13 +1410,19 @@
           "name": "timeout",
           "description": "Timeout in milliseconds",
           "required": false,
-          "schema": { "type": "integer", "minimum": 0, "default": 30000 }
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 30000
+          }
         }
       ],
       "result": {
         "name": "success",
         "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
       }
     },
     {
@@ -1307,572 +1434,52 @@
           "name": "deviceId",
           "description": "ID of the target device",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "sessionId",
           "description": "Webview session ID",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "url",
           "description": "URL to match. Either a literal string or a JavaScript regex source (without delimiters).",
           "required": true,
-          "schema": { "type": "string" }
+          "schema": {
+            "type": "string"
+          }
         },
         {
           "name": "isRegex",
           "description": "Treat url as a regex source instead of a literal string",
           "required": false,
-          "schema": { "type": "boolean", "default": false }
-        },
-        {
-          "name": "timeout",
-          "description": "Timeout in milliseconds",
-          "required": false,
-          "schema": { "type": "integer", "minimum": 0, "default": 30000 }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.query",
-      "summary": "Query DOM elements in webview",
-      "description": "Resolves DOM elements in the attached webview using one of the supported strategies. Returns server-allocated node IDs that remain valid until the DOM mutates or the session ends.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "root",
-          "description": "Optional ancestor node ID to scope the search",
-          "required": false,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "strategy",
-          "description": "Selection strategy",
-          "required": true,
           "schema": {
-            "type": "string",
-            "enum": ["css", "role", "text", "label", "placeholder", "testId", "altText", "title"]
-          }
-        },
-        {
-          "name": "value",
-          "description": "Strategy value (e.g. CSS selector, role name, text)",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "options",
-          "description": "Strategy-specific options (e.g. exact, name)",
-          "required": false,
-          "schema": { "type": "object", "additionalProperties": true }
-        },
-        {
-          "name": "all",
-          "description": "If true, return every match; otherwise return at most one",
-          "required": false,
-          "schema": { "type": "boolean", "default": false }
-        }
-      ],
-      "result": {
-        "name": "queryResult",
-        "description": "Matching node IDs",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "nodes": {
-              "type": "array",
-              "items": { "type": "string" }
-            }
-          },
-          "required": ["nodes"]
-        }
-      }
-    },
-    {
-      "name": "device.webview.element.click",
-      "summary": "Click webview element",
-      "description": "Clicks the given DOM element. Auto-waits for the element to be actionable (visible, enabled, stable) before dispatching.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID from device.webview.query",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "options",
-          "description": "Click options (button, clickCount, force, etc)",
-          "required": false,
-          "schema": { "type": "object", "additionalProperties": true }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.fill",
-      "summary": "Fill webview input element",
-      "description": "Clears the input element's value and types the given value into it.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID of the input element",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "value",
-          "description": "Value to set",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.type",
-      "summary": "Type into webview element",
-      "description": "Appends the given text to the focused element. Does not clear existing content.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID to focus and type into",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "text",
-          "description": "Text to type",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.press",
-      "summary": "Press a key on a webview element",
-      "description": "Dispatches a keyboard event to the given element (e.g. 'Enter', 'ArrowDown', 'a').",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID to dispatch the key to",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "key",
-          "description": "Key name following the W3C UI Events KeyboardEvent.key spec",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.hover",
-      "summary": "Hover over webview element",
-      "description": "Dispatches mouseenter/mouseover/mousemove events at the center of the given element.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID to hover",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.focus",
-      "summary": "Focus webview element",
-      "description": "Calls focus() on the given element.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID to focus",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.scrollIntoView",
-      "summary": "Scroll webview element into view",
-      "description": "Calls scrollIntoView({ block: 'center', inline: 'center' }) on the given element.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID to scroll into view",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.check",
-      "summary": "Set checked state on a webview checkbox or radio",
-      "description": "Sets the checked state of a checkbox or radio input. No-op if the element is already in the requested state.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID of the checkbox or radio",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "checked",
-          "description": "Desired checked state",
-          "required": true,
-          "schema": { "type": "boolean" }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.selectOption",
-      "summary": "Select options in a webview <select>",
-      "description": "Selects one or more options in a <select> element by value. For single-select, only the first value is used.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID of the <select> element",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "values",
-          "description": "Option values to select",
-          "required": true,
-          "schema": {
-            "type": "array",
-            "items": { "type": "string" }
-          }
-        }
-      ],
-      "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
-      }
-    },
-    {
-      "name": "device.webview.element.inspect",
-      "summary": "Inspect webview element state",
-      "description": "Returns a bundled snapshot of the element's common state in a single round-trip: text, value, attributes, bounding box, and visibility/enabled/checked flags.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID to inspect",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "elementState",
-        "description": "Element state snapshot",
-        "schema": { "$ref": "#/components/schemas/WebViewElementState" }
-      }
-    },
-    {
-      "name": "device.webview.element.getAttribute",
-      "summary": "Get a webview element attribute",
-      "description": "Returns the value of the given DOM attribute, or null if the attribute is not set.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "name",
-          "description": "Attribute name",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "attributeValue",
-        "description": "Attribute value, or null when the attribute is not set",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "value": {
-              "description": "Attribute value as a string, or null"
-            }
-          },
-          "required": ["value"]
-        }
-      }
-    },
-    {
-      "name": "device.webview.element.getProperty",
-      "summary": "Get a webview element JS property",
-      "description": "Returns the JSON-serialized value of the given DOM property (e.g. 'value', 'checked', 'innerText').",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "name",
-          "description": "Property name",
-          "required": true,
-          "schema": { "type": "string" }
-        }
-      ],
-      "result": {
-        "name": "propertyValue",
-        "description": "Serialized property value",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "value": {}
-          }
-        }
-      }
-    },
-    {
-      "name": "device.webview.element.waitFor",
-      "summary": "Wait for webview element state",
-      "description": "Polls server-side until the given element matches the requested state or the timeout elapses.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "nodeId",
-          "description": "Node ID to wait on",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
-          "name": "state",
-          "description": "State to wait for",
-          "required": true,
-          "schema": {
-            "type": "string",
-            "enum": ["visible", "hidden", "attached", "detached", "enabled", "disabled"]
+            "type": "boolean",
+            "default": false
           }
         },
         {
           "name": "timeout",
           "description": "Timeout in milliseconds",
           "required": false,
-          "schema": { "type": "integer", "minimum": 0, "default": 30000 }
+          "schema": {
+            "type": "integer",
+            "minimum": 0,
+            "default": 30000
+          }
         }
       ],
       "result": {
         "name": "success",
         "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "schema": {
+          "$ref": "#/components/schemas/SuccessResult"
+        }
       }
     },
     {
@@ -1984,7 +1591,10 @@
           },
           "platform": {
             "type": "string",
-            "enum": ["ios", "android"],
+            "enum": [
+              "ios",
+              "android"
+            ],
             "description": "Device platform"
           },
           "status": {
@@ -2000,7 +1610,13 @@
             "description": "Provider information for this device"
           }
         },
-        "required": ["id", "name", "platform", "status", "model"]
+        "required": [
+          "id",
+          "name",
+          "platform",
+          "status",
+          "model"
+        ]
       },
       "DeviceProvider": {
         "type": "object",
@@ -2015,14 +1631,19 @@
             "description": "Session identifier for this device allocation"
           }
         },
-        "required": ["type"]
+        "required": [
+          "type"
+        ]
       },
       "ScreenshotResult": {
         "type": "object",
         "properties": {
           "format": {
             "type": "string",
-            "enum": ["png", "jpeg"],
+            "enum": [
+              "png",
+              "jpeg"
+            ],
             "description": "Image format"
           },
           "data": {
@@ -2030,18 +1651,25 @@
             "description": "Base64 encoded image data with data URI prefix"
           }
         },
-        "required": ["format", "data"]
+        "required": [
+          "format",
+          "data"
+        ]
       },
       "SuccessResult": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
-            "enum": ["ok"],
+            "enum": [
+              "ok"
+            ],
             "description": "Operation status"
           }
         },
-        "required": ["status"]
+        "required": [
+          "status"
+        ]
       },
       "DeviceInfo": {
         "type": "object",
@@ -2060,18 +1688,34 @@
             "description": "Server version"
           }
         },
-        "required": ["name", "version"]
+        "required": [
+          "name",
+          "version"
+        ]
       },
       "Rect": {
         "type": "object",
         "description": "Rectangle in pixels",
         "properties": {
-          "x": { "type": "integer" },
-          "y": { "type": "integer" },
-          "width": { "type": "integer" },
-          "height": { "type": "integer" }
+          "x": {
+            "type": "integer"
+          },
+          "y": {
+            "type": "integer"
+          },
+          "width": {
+            "type": "integer"
+          },
+          "height": {
+            "type": "integer"
+          }
         },
-        "required": ["x", "y", "width", "height"]
+        "required": [
+          "x",
+          "y",
+          "width",
+          "height"
+        ]
       },
       "WebView": {
         "type": "object",
@@ -2106,7 +1750,14 @@
             "description": "True when the webview has non-zero on-screen bounds"
           }
         },
-        "required": ["id", "url", "title", "bundleId", "bounds", "isVisible"]
+        "required": [
+          "id",
+          "url",
+          "title",
+          "bundleId",
+          "bounds",
+          "isVisible"
+        ]
       },
       "WebViewSession": {
         "type": "object",
@@ -2117,53 +1768,9 @@
             "description": "Opaque session identifier used by all subsequent webview calls"
           }
         },
-        "required": ["sessionId"]
-      },
-      "WebViewBoundingBox": {
-        "type": "object",
-        "description": "Element bounds in two coordinate spaces so the client can compose with native locator bounds",
-        "properties": {
-          "screen": {
-            "$ref": "#/components/schemas/Rect",
-            "description": "Element bounds in screen coordinates"
-          },
-          "frame": {
-            "$ref": "#/components/schemas/Rect",
-            "description": "Element bounds relative to the webview's own viewport"
-          }
-        },
-        "required": ["screen", "frame"]
-      },
-      "WebViewElementState": {
-        "type": "object",
-        "description": "Bundled element state returned by device.webview.element.inspect",
-        "properties": {
-          "text": {
-            "type": "string",
-            "description": "Element innerText"
-          },
-          "value": {
-            "type": "string",
-            "description": "Input value (only present for form elements)"
-          },
-          "attributes": {
-            "type": "object",
-            "description": "DOM attributes as a name -> string-value map",
-            "additionalProperties": { "type": "string" }
-          },
-          "boundingBox": {
-            "$ref": "#/components/schemas/WebViewBoundingBox"
-          },
-          "isVisible": { "type": "boolean" },
-          "isHidden": { "type": "boolean" },
-          "isEnabled": { "type": "boolean" },
-          "isDisabled": { "type": "boolean" },
-          "isChecked": {
-            "type": "boolean",
-            "description": "Only present for checkboxes and radios"
-          }
-        },
-        "required": ["text", "attributes", "boundingBox", "isVisible", "isHidden", "isEnabled", "isDisabled"]
+        "required": [
+          "sessionId"
+        ]
       }
     }
   }
