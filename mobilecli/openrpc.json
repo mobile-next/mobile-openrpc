@@ -1011,82 +1011,6 @@
       }
     },
     {
-      "name": "device.webview.url",
-      "summary": "Get webview URL",
-      "description": "Returns the current top-level URL of the attached webview.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "result": {
-        "name": "url",
-        "description": "Current URL",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "url": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "url"
-          ]
-        }
-      }
-    },
-    {
-      "name": "device.webview.title",
-      "summary": "Get webview title",
-      "description": "Returns document.title of the attached webview.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "result": {
-        "name": "title",
-        "description": "Document title",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "title": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "title"
-          ]
-        }
-      }
-    },
-    {
       "name": "device.webview.goto",
       "summary": "Navigate webview to URL",
       "description": "Navigates the attached webview to the given URL and optionally waits for a load state.",
@@ -1237,44 +1161,6 @@
         "description": "Operation result",
         "schema": {
           "$ref": "#/components/schemas/SuccessResult"
-        }
-      }
-    },
-    {
-      "name": "device.webview.content",
-      "summary": "Get webview HTML content",
-      "description": "Returns the outerHTML of the attached webview's <html> element.",
-      "params": [
-        {
-          "name": "deviceId",
-          "description": "ID of the target device",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        },
-        {
-          "name": "sessionId",
-          "description": "Webview session ID",
-          "required": true,
-          "schema": {
-            "type": "string"
-          }
-        }
-      ],
-      "result": {
-        "name": "content",
-        "description": "Webview HTML content",
-        "schema": {
-          "type": "object",
-          "properties": {
-            "html": {
-              "type": "string"
-            }
-          },
-          "required": [
-            "html"
-          ]
         }
       }
     },
