@@ -838,6 +838,211 @@
       }
     },
     {
+      "name": "device.apps.path",
+      "summary": "Get app data container path",
+      "description": "Returns the on-device path to an app's data container. Currently supported on Android and iOS real devices.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle identifier (iOS) or package name (Android) of the application",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "containerPath",
+        "description": "Data container path",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string", "description": "Absolute path to the app's data container on the device" }
+          },
+          "required": ["path"]
+        }
+      }
+    },
+    {
+      "name": "device.fs.ls",
+      "summary": "List files on device",
+      "description": "Lists files and directories at a given path on the device, or in an app's container. Defaults to the device root if no path is given. Supported on Android and iOS Simulator.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle identifier to list files inside an app's container",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "remotePath",
+          "description": "Absolute path on the device to list. Defaults to device root if omitted.",
+          "required": false,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "entries",
+        "description": "List of file entries",
+        "schema": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string", "description": "File or directory name" },
+              "path": { "type": "string", "description": "Full path on the device" },
+              "size": { "type": "integer", "description": "File size in bytes (0 for directories)" },
+              "modTime": { "type": "string", "format": "date-time", "description": "Last modification time" },
+              "isDir": { "type": "boolean", "description": "True if this entry is a directory" }
+            },
+            "required": ["name", "path", "size", "isDir"]
+          }
+        }
+      }
+    },
+    {
+      "name": "device.fs.pull",
+      "summary": "Pull a file from the device",
+      "description": "Downloads a file from the device to the local filesystem. Supports arbitrary paths on Android and iOS Simulator.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "remotePath",
+          "description": "Absolute path of the file on the device",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "localPath",
+          "description": "Local destination path to write the file to",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.fs.push",
+      "summary": "Push a file to the device",
+      "description": "Uploads a local file to the device. For /data/user/ paths on Android, the file is staged via /data/local/tmp and copied with run-as. The local file must exist.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "localPath",
+          "description": "Local path of the file to upload",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "remotePath",
+          "description": "Absolute destination path on the device",
+          "required": true,
+          "schema": { "type": "string" }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.fs.mkdir",
+      "summary": "Create a directory on the device",
+      "description": "Creates a directory at the specified path on the device or in an app's container.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle identifier to create directory inside an app's container",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "remotePath",
+          "description": "Absolute path of the directory to create",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "parents",
+          "description": "Create parent directories as needed (like mkdir -p)",
+          "required": false,
+          "schema": { "type": "boolean", "default": false }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
+      "name": "device.fs.rm",
+      "summary": "Remove a file or directory on the device",
+      "description": "Removes a file or directory at the specified path on the device or in an app's container.",
+      "params": [
+        {
+          "name": "deviceId",
+          "description": "ID of the target device (optional - will auto-select if not provided)",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "bundleId",
+          "description": "Bundle identifier to remove files inside an app's container",
+          "required": false,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "remotePath",
+          "description": "Absolute path of the file or directory to remove",
+          "required": true,
+          "schema": { "type": "string" }
+        },
+        {
+          "name": "recursive",
+          "description": "Remove directories and their contents recursively (like rm -rf)",
+          "required": false,
+          "schema": { "type": "boolean", "default": false }
+        }
+      ],
+      "result": {
+        "name": "success",
+        "description": "Operation result",
+        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+      }
+    },
+    {
       "name": "device.crashes.list",
       "summary": "List crash reports",
       "description": "Returns a list of crash reports from the specified device. Supports iOS real devices (via crashreport service), iOS simulators (reads from DiagnosticReports), and Android devices (parses adb logcat crash buffer).",
