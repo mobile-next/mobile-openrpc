@@ -913,7 +913,7 @@
     {
       "name": "device.fs.pull",
       "summary": "Pull a file from the device",
-      "description": "Downloads a file from the device to the local filesystem. Supports arbitrary paths on Android and iOS Simulator.",
+      "description": "Downloads a file from the device and returns its contents as base64. Maximum file size is 1 MB. Supports arbitrary paths on Android and iOS Simulator.",
       "params": [
         {
           "name": "deviceId",
@@ -926,24 +926,25 @@
           "description": "Absolute path of the file on the device",
           "required": true,
           "schema": { "type": "string" }
-        },
-        {
-          "name": "localPath",
-          "description": "Local destination path to write the file to",
-          "required": true,
-          "schema": { "type": "string" }
         }
       ],
       "result": {
-        "name": "success",
-        "description": "Operation result",
-        "schema": { "$ref": "#/components/schemas/SuccessResult" }
+        "name": "fileContent",
+        "description": "File contents",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "content": { "type": "string", "description": "Base64-encoded file contents" },
+            "size": { "type": "integer", "description": "File size in bytes" }
+          },
+          "required": ["content", "size"]
+        }
       }
     },
     {
       "name": "device.fs.push",
       "summary": "Push a file to the device",
-      "description": "Uploads a local file to the device. For /data/user/ paths on Android, the file is staged via /data/local/tmp and copied with run-as. The local file must exist.",
+      "description": "Uploads a file to the device from base64-encoded content. Maximum file size is 1 MB. For /data/user/ paths on Android, the file is staged via /data/local/tmp and copied with run-as.",
       "params": [
         {
           "name": "deviceId",
@@ -952,16 +953,16 @@
           "schema": { "type": "string" }
         },
         {
-          "name": "localPath",
-          "description": "Local path of the file to upload",
-          "required": true,
-          "schema": { "type": "string" }
-        },
-        {
           "name": "remotePath",
           "description": "Absolute destination path on the device",
           "required": true,
           "schema": { "type": "string" }
+        },
+        {
+          "name": "content",
+          "description": "Base64-encoded file contents to write. Maximum decoded size is 1 MB.",
+          "required": true,
+          "schema": { "type": "string", "format": "byte" }
         }
       ],
       "result": {
