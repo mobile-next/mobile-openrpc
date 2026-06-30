@@ -1012,7 +1012,7 @@ This is a notification — no response is expected
         "model": "string",
         "provider": {
           "type": "string",
-          "sessionId": "string"
+          "allocationId": "string"
         }
       }
     ],
@@ -1025,7 +1025,7 @@ This is a notification — no response is expected
         "model": "string",
         "provider": {
           "type": "string",
-          "sessionId": "string"
+          "allocationId": "string"
         }
       }
     ],
@@ -1038,7 +1038,7 @@ This is a notification — no response is expected
         "model": "string",
         "provider": {
           "type": "string",
-          "sessionId": "string"
+          "allocationId": "string"
         }
       }
     ]
@@ -1352,7 +1352,7 @@ Describes where the device is provided from
 | Property | Type | Required | Description |
 |----------|------|----------|-------------|
 | `type` | `string` | ✓ | Provider type (e.g. 'mobilefleet') |
-| `sessionId` | `string` |  | Session identifier for this device allocation |
+| `allocationId` | `string` |  | Allocation identifier for this device allocation |
 
 ### FleetDevice
 
