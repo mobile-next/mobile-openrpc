@@ -1105,6 +1105,11 @@
         "code": -32026,
         "message": "Insufficient credits",
         "data": "Account does not have enough credits to allocate a device"
+      },
+      "DeviceProvisioning": {
+        "code": -32027,
+        "message": "Device is still being provisioned",
+        "data": "The device is still being provisioned and cannot be released yet"
       }
     },
     "schemas": {
