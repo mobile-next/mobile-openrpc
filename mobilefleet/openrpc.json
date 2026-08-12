@@ -1110,6 +1110,11 @@
         "code": -32027,
         "message": "Device is still being provisioned",
         "data": "The device is still being provisioned and cannot be released yet"
+      },
+      "NotEligible": {
+        "code": -32028,
+        "message": "Account not eligible",
+        "data": "This account is not eligible to allocate a device"
       }
     },
     "schemas": {
